@@ -76,10 +76,10 @@ se está vivo ou não. Isso ara saber se o jogo ja acabou ou não*/
 
 //Pos == V -> Vertical
 //Pos == H -> Horizontal
-void add_ship_table(struct Ship *barco1, struct Game *player, int x, int y, char pos){
+/*void add_ship_table(struct Ship *barco1, struct Game *player, int x, int y, char pos){
     if(x > player->linhas || y > player->colunas){
         printf("Erro: posicao fora dos limites");
-        return;    
+        return;
     }
 
     int aux = 0;
@@ -104,7 +104,102 @@ void add_ship_table(struct Ship *barco1, struct Game *player, int x, int y, char
            //printf("%d:%d\n",i,y);
            player->map[x-1][i+y-1] = '*';
         }
+      return;
     }
+}*/
+
+void add_ship_table(struct Ship *ship1, struct Game *player, int row, int col, char pos){
+  /*mudar os returns para zeros ou 1 para poder lidar com os erros*/
+
+  //Se coordeadas introduzidas não pertcerem as dimensoes do map
+  if(row > player->linhas || col > player->colunas){
+      printf("Erro: posicao fora dos limites");
+      return;
+  }
+
+  switch (pos) {
+    /*Nas opçoes de posicionamento onde ha deslocamento vertical o valor das colunas é fixo e o das linhas varia*/
+    //up
+    case 'u': if(row - (ship1->dim) + 1 < 0){
+                printf("Ultrapassa os limites do mapa\n");
+                return;
+              }
+              //começa a analisar dese da posiçao final do barco ate a cordenada introduzida se o espaço esta livre
+              for(int i = row - ship1->dim + 1 ; i <= row; i++){
+                if((player->map[i][col] == '*')){
+                    printf("Posicao ja ocupada com outro navio\n");
+                    return;
+                }
+              }
+
+              //Se tiver todas as condições favoraveis para add o navio
+
+              for(int i = row - ship1->dim + 1 ; i <= row; i++){
+                player->map[i][col] = '*';
+              }
+              break;
+
+    //down
+    case 'd': if(row + (ship1->dim) -1 > player->linhas){
+                printf("Ultrapassa os limites do mapa\n");
+                return;
+              }
+              //começa a analisar dese da posiçao final do barco ate a cordenada introduzida se o espaço esta livre
+              for(int i = row ; i <= row + ship1->dim - 1; i++){
+                if((player->map[i][col] == '*')){
+                    printf("Posicao ja ocupada com outro navio\n");
+                    return;
+                }
+              }
+
+              //Se tiver todas as condições favoraveis para add o navio
+
+              for( int i = row ; i <= row + ship1->dim - 1; i++){
+                player->map[i][col] = '*';
+              }
+              break;
+    /*Nas opçoes de posicionamento onde ha deslocamento lateral o valor da linha é fixo e o das colunas varia*/
+    //left
+    case 'l': if(col - (ship1->dim) + 1 < 0){
+                printf("Ultrapassa os limites do mapa\n");
+                return;
+              }
+              //começa a analisar dese da posiçao final do barco ate a cordenada introduzida se o espaço esta livre
+              for(int i = col - ship1->dim + 1 ; i <= col; i++){
+                if((player->map[row][i] == '*')){
+                    printf("Posicao ja ocupada com outro navio\n");
+                    return;
+                }
+              }
+
+              //Se tiver todas as condições favoraveis para add o navio
+
+              for(int i = col - ship1->dim + 1 ; i <= col; i++){
+                player->map[row][i] = '*';
+              }
+              break;
+
+    //right
+    case 'r': if(col + (ship1->dim) -1 > player->linhas){
+                printf("Ultrapassa os limites do mapa\n");
+                return;
+              }
+              //começa a analisar dese da posiçao final do barco ate a cordenada introduzida se o espaço esta livre
+              for(int i = col ; i <= col + ship1->dim - 1; i++){
+                if((player->map[row][i] == '*')){
+                    printf("Posicao ja ocupada com outro navio\n");
+                    return;
+                }
+              }
+
+              //Se tiver todas as condições favoraveis para add o navio
+
+              for( int i = col ; i <= col + ship1->dim - 1; i++){
+                player->map[row][i] = '*';
+              }
+              break;
+    default: printf("\nInsira uma opção valida!!\n" );
+  }
 }
 
 //////////////////////////////////////////////////////////////////////7
@@ -132,12 +227,12 @@ int main(){
 
   create_table(&player1);
 
-  int y, x;
+  int row, col;
   char pos;
   for(int i = 0; i < 5; i++){
-      printf("Insira x, y, pos: ");
-      scanf("%d %d %c", &x, &y,&pos);
-      add_ship_table(&teste, &player1, y, x, pos); //(y,x)
+      printf("Insira row, col, pos: ");
+      scanf("%d %d %c", &row, &col,&pos);
+      add_ship_table(&teste, &player1, row-1, col-1, pos);
       print_table(&player1);
   }
   //add_ship_table(&teste, &player1, 2, 3, 0); //(y,x)

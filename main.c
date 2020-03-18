@@ -48,15 +48,19 @@ void print_table(struct Game *player){
 struct Ship{
   //Atributes
   int dim, x, y;
-  char pos;
-  int shot; //posicao atingida
+  int up_size;
+  int down_size;
+  int left_size;
+  int right_size;
+
+};
 
   //int alive = 1;
   /* Se a posicao (x,y) corresponder a um barco e ainda nao tiver sido
   atingida aumentamos a var shot e mudamos o simbolo no Table. Se shot == dim
   mudamos o atributo alive para 0
   */
-};
+
 
 /*Cada barco vai ter um numero que o identifica, usamos uma funçao
 para escolher um numero aleatorio e procurar espaço onde o barco caiba*/
@@ -74,61 +78,42 @@ se está vivo ou não. Isso ara saber se o jogo ja acabou ou não*/
  */
 
 
-//Pos == V -> Vertical
-//Pos == H -> Horizontal
-/*void add_ship_table(struct Ship *barco1, struct Game *player, int x, int y, char pos){
-    if(x > player->linhas || y > player->colunas){
-        printf("Erro: posicao fora dos limites");
-        return;
-    }
-
-    int aux = 0;
-    for(int i = 0; aux < barco1->dim; i++,aux++){
-        if((pos == 0 && i+y > player->colunas) ||(pos == 1 && i+x > player->linhas)){
-            printf("Ultrapassa os limites do tabuleiro\n");
-            return;
-        }else if((player->map[x-1][i+y-1] == '*')){
-            printf("Posicao ja ocupada com outro navio\n");
-            return;
-        }
-    }
-
-    if(pos == 'H'){ //Horizontal
-        aux = 0;
-        for(int i = 0; aux < barco1->dim; i++, aux++){
-           player->map[i+x-1][y-1] = '*';
-        }
-    }else{   //Vertical
-        aux = 0;
-        for(int i = 0; aux < barco1->dim; i++, aux++){
-           //printf("%d:%d\n",i,y);
-           player->map[x-1][i+y-1] = '*';
-        }
-      return;
-    }
-}*/
-
-void add_ship_table(struct Ship *ship1, struct Game *player, int row, int col, char pos){
-  /*mudar os returns para zeros ou 1 para poder lidar com os erros*/
-
+void add_weird_ship_table(struct Ship *ship1, struct Game *player, int row, int col, char pos){
   //Se coordeadas introduzidas não pertcerem as dimensoes do map
   if(row > player->linhas || col > player->colunas){
       printf("Erro: posicao fora dos limites");
       return;
   }
 
+
+
+}
+
+int add_ship_table(struct Ship *ship1, struct Game *player, int row, int col, char pos){
+  /*mudar os returns para zeros ou 1 para poder lidar com os erros*/
+
+  //Se coordeadas introduzidas não pertcerem as dimensoes do map
+  if(row > player->linhas || col > player->colunas){
+      printf("Erro: posicao fora dos limites");
+      return 0;
+  }
+
   switch (pos) {
     /*Nas opçoes de posicionamento onde ha deslocamento vertical o valor das colunas é fixo e o das linhas varia*/
-    //up
+    //up//Se coordeadas introduzidas não pertcerem as dimensoes do map
+  if(row > player->linhas || col > player->colunas){
+      printf("Erro: posicao fora dos limites");
+      return 0;
+  }
     case 'u': if(row - (ship1->dim) + 1 < 0){
                 printf("Ultrapassa os limites do mapa\n");
-                return;
+                return 0;
               }
               //começa a analisar dese da posiçao final do barco ate a cordenada introduzida se o espaço esta livre
               for(int i = row - ship1->dim + 1 ; i <= row; i++){
                 if((player->map[i][col] == '*')){
                     printf("Posicao ja ocupada com outro navio\n");
-                    return;
+                    return 0;
                 }
               }
 
@@ -140,15 +125,15 @@ void add_ship_table(struct Ship *ship1, struct Game *player, int row, int col, c
               break;
 
     //down
-    case 'd': if(row + (ship1->dim) -1 > player->linhas){
+    case 'd': if(row + (ship1->dim) -1 > player->linhas - 1){
                 printf("Ultrapassa os limites do mapa\n");
-                return;
+                return 0;
               }
               //começa a analisar dese da posiçao final do barco ate a cordenada introduzida se o espaço esta livre
               for(int i = row ; i <= row + ship1->dim - 1; i++){
                 if((player->map[i][col] == '*')){
                     printf("Posicao ja ocupada com outro navio\n");
-                    return;
+                    return 0;
                 }
               }
 
@@ -162,13 +147,13 @@ void add_ship_table(struct Ship *ship1, struct Game *player, int row, int col, c
     //left
     case 'l': if(col - (ship1->dim) + 1 < 0){
                 printf("Ultrapassa os limites do mapa\n");
-                return;
+                return 0;
               }
               //começa a analisar dese da posiçao final do barco ate a cordenada introduzida se o espaço esta livre
               for(int i = col - ship1->dim + 1 ; i <= col; i++){
                 if((player->map[row][i] == '*')){
                     printf("Posicao ja ocupada com outro navio\n");
-                    return;
+                    return 0;
                 }
               }
 
@@ -180,15 +165,15 @@ void add_ship_table(struct Ship *ship1, struct Game *player, int row, int col, c
               break;
 
     //right
-    case 'r': if(col + (ship1->dim) -1 > player->linhas){
+    case 'r': if(col  + (ship1->dim) -1 > player->linhas -1 ){
                 printf("Ultrapassa os limites do mapa\n");
-                return;
+                return 0;
               }
               //começa a analisar dese da posiçao final do barco ate a cordenada introduzida se o espaço esta livre
               for(int i = col ; i <= col + ship1->dim - 1; i++){
                 if((player->map[row][i] == '*')){
                     printf("Posicao ja ocupada com outro navio\n");
-                    return;
+                    return 0;
                 }
               }
 
@@ -199,16 +184,30 @@ void add_ship_table(struct Ship *ship1, struct Game *player, int row, int col, c
               }
               break;
     default: printf("\nInsira uma opção valida!!\n" );
+            return 0;
+  }
+  return 1;
+}
+
+//funçao atirar
+void aim_fire(struct Game *player, int row, int col){
+  if(player->map[row][col] == 'o'){
+    printf("Tiro na agua!\n");
+  }
+  else if(player->map[row][col] == 'x'){
+    printf("Posi ja foi atingida");
+  }
+  else if(player->map[row][col] == '*'){
+    player->map[row][col] = 'x';
+    printf("Acertou");
+    //atualizar pontuação
   }
 }
 
 //////////////////////////////////////////////////////////////////////7
 
 int main(){
-
-
-
-  printf("Bem vindo ao BattleShip!\n"
+  /*printf("Bem vindo ao BattleShip!\n"
          "Antes de comecarmos o jogo gostaria de vos conhecer melhor...\n"
          "Nome do primeiro jogador: \n"
          "Nome do segundo jogador: \n"
@@ -234,9 +233,68 @@ int main(){
       scanf("%d %d %c", &row, &col,&pos);
       add_ship_table(&teste, &player1, row-1, col-1, pos);
       print_table(&player1);
-  }
-  //add_ship_table(&teste, &player1, 2, 3, 0); //(y,x)
+  }*/
 
+  struct Game player1;
+  struct Game player2;
+
+  int map_size;
+  int n_ships;
+  int option;
+
+  printf("BattleShip\n");
+
+  printf("Map size:\n");
+  scanf("%d", &map_size);
+
+  printf("Nº Ships\n");
+  scanf("%d", &n_ships);
+  printf("1-Manual  2- Auto\n");
+  scanf("%d", &option);
+
+  player1.linhas = map_size;
+  player1.colunas = map_size;
+  create_table(&player1);
+  print_table(&player1);
+
+  struct Ship teste;
+  teste.dim = 3;
+
+  int row;
+  int col;
+  char pos;
+
+  /*for(int i = 0; i < n_ships; i++){
+    printf("Insira row, col, pos: ");
+    scanf("%d %d %c", &row, &col,&pos);
+    if(add_ship_table(&teste, &player1, row-1, col-1, pos) == 1){
+      print_table(&player1);
+    }
+    else i--;
+  }*/
+
+  for(int i = 0; i < n_ships; i++){
+    int aux_pos = rand()%4;
+
+    switch (aux_pos) {
+      case 0: pos = 'u';
+              break;
+
+      case 1: pos = 'd';
+              break;
+
+      case 2: pos = 'l';
+              break;
+      case 3: pos = 'r';
+              break;
+    }
+    printf("\nposiçao gerada aleatoria mente: %d %c\n", aux_pos, pos);
+
+    if(add_ship_table(&teste, &player1, rand() % player1.linhas, rand() % player1.colunas, pos) == 1){
+      print_table(&player1);
+    }
+    else {i--;}
+  }
 
   return 0;
 }

@@ -264,36 +264,40 @@ int main(){
   int col;
   char pos;
 
-  /*for(int i = 0; i < n_ships; i++){
-    printf("Insira row, col, pos: ");
-    scanf("%d %d %c", &row, &col,&pos);
-    if(add_ship_table(&teste, &player1, row-1, col-1, pos) == 1){
-      print_table(&player1);
+  if(option == 1){
+    for(int i = 0; i < n_ships; i++){
+      printf("Insira row, col, pos: ");
+      scanf("%d %d %c", &row, &col,&pos);
+      if(add_ship_table(&teste, &player1, row-1, col-1, pos) == 1){
+        print_table(&player1);
+      }
+      else i--;
     }
-    else i--;
-  }*/
+  }
 
-  for(int i = 0; i < n_ships; i++){
-    int aux_pos = rand()%4;
+  else if(option == 2){
+    for(int i = 0; i < n_ships; i++){
+      int aux_pos = rand()%4;
 
-    switch (aux_pos) {
-      case 0: pos = 'u';
-              break;
+      switch (aux_pos) {
+        case 0: pos = 'u';
+                break;
 
-      case 1: pos = 'd';
-              break;
+              case 1: pos = 'd';
+                break;
 
-      case 2: pos = 'l';
-              break;
-      case 3: pos = 'r';
-              break;
+              case 2: pos = 'l';
+                break;
+              case 3: pos = 'r';
+                break;
+            }
+      printf("\nposiçao gerada aleatoria mente: %d %c\n", aux_pos, pos);
+
+      if(add_ship_table(&teste, &player1, rand() % player1.linhas, rand() % player1.colunas, pos) == 1){
+        print_table(&player1);
+      }
+      else {i--;}
     }
-    printf("\nposiçao gerada aleatoria mente: %d %c\n", aux_pos, pos);
-
-    if(add_ship_table(&teste, &player1, rand() % player1.linhas, rand() % player1.colunas, pos) == 1){
-      print_table(&player1);
-    }
-    else {i--;}
   }
 
   return 0;

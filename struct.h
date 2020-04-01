@@ -2,10 +2,10 @@
 #include<stdio.h>
 
 typedef struct {
-  int num_ships;
+  int type;
   int **bitmap;
   int row, col; //Posicao centro do barco
-  int rot
+  int rot;
 }Ship;
 
 typedef struct{
@@ -16,6 +16,7 @@ typedef struct{
 typedef struct{
     int size;
     Cell **matrix;
+    Ship *ships;
 }Game;
 
 /*
@@ -25,8 +26,6 @@ typedef struct{
  * 3 - missed shot
 */
 
-
-//submarinos, contratorpedeiros, naviostanque, portaavioes, t;
 void create_ship(Ship *ship, int ind){
   ship->bitmap = (int**) malloc(5 * sizeof(int*)); //Linhas
   for(int i = 0; i < 5; i++){
@@ -72,7 +71,7 @@ void create_ship(Ship *ship, int ind){
     }
 }
 //Cria a tabela
-void create_table(Game *player){
+void create_table(Game *player, int num_ships){
 
    //Alocar dinamicamente a memoria para struct Ship **matrix[SIZE][SIZE];
    player->matrix = (Cell**) malloc(player->size * sizeof(Cell*)); //Linhas
@@ -85,6 +84,8 @@ void create_table(Game *player){
             player->matrix[i][j].ship = NULL;
          }
      }
+
+   player->ships = (Ship * ) malloc(sizeof(Ship) * num_ships);
 }
 
 
@@ -104,15 +105,15 @@ void print_table(Game player){
 
 
 // return -1: Tipo de barco sem ser inserido
-int check(Ship ships[]){
+int check(int num_type[]){
   int count = 0;
 
-  for(int i = 1; i < 7; i++){
-    if(ships[i].num_ships <= 0){
+  for(int i = 0; i < 5; i++){
+    if(num_type[i] == 0){
       return -1;
     }
 
-    count += ships[i].num_ships;
+    count += num_type[i];
   }
 
   return count;
@@ -128,12 +129,12 @@ int inside_table(Game *player, int row, int col){
 }
 
 
-int check_table(Ship *ship, Game *player, int row,int col){
+int check_table(Ship *ship, Game *player){
   for(int i = 0; i < 5; i++){
     for (int j = 0; j < 5; j++) {
        if(ship->bitmap[i][j] != 0){
-        if(inside_table(player,row-2+i,col-2+j) == 1 || player->matrix[row-2+i][col-2+j].ship != NULL){
-          return 1;
+        if(inside_table(player,ship->row-2+i,ship->col-2+j) == 1 || player->matrix[ship->row-2+i][ship->col-2+j].ship != NULL){
+          return -1;
         }
       }
     }
@@ -142,23 +143,25 @@ int check_table(Ship *ship, Game *player, int row,int col){
 }
 
 
-void add_ship_table(Ship *ship, Game *player, int row,int col, char pos){
+int add_ship_table(Ship *ship, Game *player){
   /*row = row-2;
   col = col-2;*/
+
+  if(check_table(ship, player) == -1) return -1;
+
   for(int i = 0; i < 5; i++){
     for(int j = 0; j < 5; j++){
       if(ship->bitmap[i][j] != 0){
-          player->matrix[row-2+i][col-2+j].ship = ship;
+          player->matrix[ship->row-2+i][ship->col-2+j].ship = ship;
       }
     }
 
   }
+  return 0;
 }
 
 void rotate(Ship *ship){
   int aux[5][5];
-  printf("\nrotate\n");
-  //vamos tirar isto quando ja tivermos criado a situação para construir os barcos
   for(int i = 0; i < 5; i++){
     for(int j = 0; j < 5; j++){
            aux[i][j] = 0;

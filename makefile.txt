@@ -1,0 +1,4 @@
+$@ is a macro that refers to the target
+$< is a macro that refers to the first dependency
+$^ is a macro that refers to all dependencies
+% is a macro to make a pattern that we want to watch in both the target and the dependency

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <time.h> 
 #include "barcos.h"
 #include "tabuleiro.h"
 #include "io.h"
@@ -17,7 +17,7 @@ int main(){
 
     //Menu
     printf("\n****   *****  *     *\t\t*       *  *  *      *  ****   *****  **\n*   *  *      * * * *\t\t *     *   *  * *    *  *   *  *   *  **\n****   *****  *  *  *\t\t  *   *    *  *  *   *  *   *  *   *  **\n*   *  *      *     *\t\t   * *     *  *   *  *  *   *  *   *    \n****   *****  *     *\t\t    *      *  *    * *  ****   *****  **\n");
-
+    
     printf("\nPressione:\n1- Colocacao manual\n2- Colocacao automatica\nOutra tecla- Exit\n");
     scanf("%d", &option);
 
@@ -87,7 +87,7 @@ int main(){
 
     }else if(option == 2){ //Caso seja acionada a opcao automatica
         srand(time(0));
-
+	
         player1.size = (rand() % (40-20+1)) + 20;
         player2.size = player1.size;
 
@@ -114,7 +114,7 @@ int main(){
                 num_type[i] = 1;
             }
         }
-
+	
 	for(int i = 0; i < 5; i++){
             for(int j = 0; j < num_type[i]; j++){
                 player1.ships[aux].type = i+1;
@@ -122,7 +122,7 @@ int main(){
                 aux++;
              }
         }
-
+	
         for(int i = 0; i < player1.num_ships; i++){
             create_ship(&player1.ships[i], player1.ships[i].type);
             create_ship(&player2.ships[i], player2.ships[i].type);
@@ -159,14 +159,25 @@ int main(){
 
         if(turn == 1){
             res = aim_fire(&player2, y, x);
+            if(res == -1){
+                player1.matrix[y][x].shot = 1;
+            }else{
+                player1.matrix[y][x].shot = 2;
+            }
 
             if(player2.num_ships == 0){
-	      printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****     *  **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *   **  **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****   * *  **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *    \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     *** **\n");
+	      printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****     *  **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *   **  **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****   * *  **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *    \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     *** **\n");											    
 		free_memory(&player1, &player2, num);
 		return 0;
             }
          }else{
             res = aim_fire(&player1, y, x);
+
+            if(res == -1){
+                player2.matrix[y][x].shot = 1;
+            }else{
+                player2.matrix[y][x].shot = 2;
+            }
 
             if(player1.num_ships == 0){
                	printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****    ***    **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *  *   *   **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****       *   **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *       \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     ****   **\n");

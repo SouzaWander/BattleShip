@@ -149,7 +149,7 @@ void insert_ships(Game *player, int flag){
 
 /*
   Analisa os tiros, se acertou na agua, num barco ou se a posicao já tinha 
-sido atingida. Alterando os valores correspondentes no bitmap
+sido atingida. Alterando os valores necessarios
 */
 int aim_fire(Game *player, int row, int col){
 

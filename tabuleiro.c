@@ -6,7 +6,7 @@
 
 /*
   Cria a tabela alocando a memoria necessaria para a matriz e para o array ships
-  e inicializa o shot a 0 e o ship a Null
+  e inicializa , na struct cell, o shot a 0 e o ship a Null
 */
 void create_table(Game *player){
 
@@ -145,23 +145,6 @@ void print_game(Game player, Game opponent){
       printf("\n");
     }
 }
-
-/*
-  Funcao auxiliar usada so para testes
-  Imprime os barcos por tipo (dá jeito para confirmar o modo automático)
-void print_aut(Game player){
-  for(int i = 0; i < player.size; i++){
-    for(int j = 0; j < player.size; j++){
-            if(player.matrix[i][j].ship == NULL){
-                printf("0");
-            }else{
-              printf("%d", player.matrix[i][j].ship->type);
-            }
-        }
-        printf("\n");
-    }
-}
-*/
 
 //Liberta toda a memoria alocada
 void free_memory(Game *player1, Game *player2, int num){

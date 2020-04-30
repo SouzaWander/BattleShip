@@ -51,7 +51,7 @@ void create_ship(Ship *ship, int ind){
     }
 }
 
-//Faz a rotação dos barcos
+//Faz a rotação dos barcos de 90 em 90 graus ate chegar a rotacao final
 void rotate(Ship *ship){
   int aux[5][5];
   if(ship->rot == 0 || ship->rot == 90 || ship->rot == 180 ||  ship->rot == 270 || ship->rot == 360){

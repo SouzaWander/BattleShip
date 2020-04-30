@@ -34,7 +34,7 @@ int inside_table(Game *player, int row, int col){
 }
 
 /*
- Verifica se a posicao está dentro dos limites 
+ Verifica se a posicao está dentro dos limites
  e se nao ha outro barco naquela posicao
  Flag 0 -> Introducao Manual
  Flag 1 -> Introducao Automatica
@@ -47,7 +47,7 @@ static int check_table(Ship *ship, Game *player, int flag){
 	  if(flag == 0) printf("Erro: posicao fora dos limites\n");
 	  return -1;
         }
-	
+
         if(player->matrix[ship->row-2+i][ship->col-2+j].ship != NULL){
 	  if(flag == 0) printf("Posicao ja ocupada por outro barco!\n");
 	  return -1;
@@ -87,9 +87,9 @@ static int add_ship_table(Ship *ship, Game *player, int flag){
 
 
 /*
-  Pede as coordenadas e a rotacao do barco ao jogador. 
-  Realiza a rotacao do barco e vai para a funcao add_ship_table verificar 
-se pode ser inserido e caso seja, o barco é inserido. 
+  Pede as coordenadas e a rotacao do barco ao jogador.
+  Realiza a rotacao do barco e vai para a funcao add_ship_table verificar
+se pode ser inserido e caso seja, o barco é inserido.
   Flag 0 -> Introducao Manual
   Flag 1 -> Introducao Automatica
 */
@@ -148,13 +148,18 @@ void insert_ships(Game *player, int flag){
 
 
 /*
-  Analisa os tiros, se acertou na agua, num barco ou se a posicao já tinha 
-sido atingida. Alterando os valores correspondentes no bitmap
+  Analisa os tiros, se acertou na agua, num barco ou se a posicao já tinha
+sido atingida. Alterando os valores correspondentes no bitmap e na cell
 */
-int aim_fire(Game *player, int row, int col){
+int aim_fire(Game *player,int row, int col){
+
+  if(player->matrix[row][col].shot > 0){
+    printf("Posicao ja tinha sido atingida!");
+    return 0;
+  }
 
   if(player->matrix[row][col].ship == NULL){
-
+    player->matrix[row][col].shot = 1;
     printf("\nTiro na agua!\n");
     return -1;
 
@@ -165,18 +170,18 @@ int aim_fire(Game *player, int row, int col){
     int aux_col = 4 - (player->matrix[row][col].ship->col + 2 - col);
 
     if(player->matrix[row][col].ship->bitmap[aux_row][aux_col] == '2'){
-
+      player->matrix[row][col].shot = 1;
       printf("Posicao ja tinha sido atingida!");
 
     }else{
-
+      player->matrix[row][col].shot = 1;
       player->matrix[row][col].ship->bitmap[aux_row][aux_col] = '2';
       player->matrix[row][col].ship->shot_count++;
       printf("\nAtingiu o barco adversario!\n");
 
       if(player->matrix[row][col].ship->shot_count == player->matrix[row][col].ship->dim) {
         printf("Afundou barco adversario!\n");
-	player->num_ships = player->num_ships - 1;
+	      player->num_ships = player->num_ships - 1;
       }
 
     }

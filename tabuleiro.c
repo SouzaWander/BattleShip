@@ -39,7 +39,7 @@ void print_table(Game player){
 
   for(int i = 0; i < player.size; i++){
     printf("%3d  ", i+1);
-
+ 
     for(int j = 0; j < player.size; j++){
 
       if(player.matrix[i][j].ship == NULL){
@@ -94,21 +94,21 @@ void print_game(Game player, Game opponent){
     //Print das matrizes
     for(int i = 0; i < player.size; i++){
       printf("%3d", i+1);
-
+   
       for(int j = 0; j < player.size; j++){
 	if(player.matrix[i][j].ship == NULL){
 	  //Para printar os tiros na agua foi buscar os shots do adversário porque não temos o 3 no bitmap
-	  if(player.matrix[i][j].shot > 0){  //Mostrar os tiros feitos pelo adversário caso tenha atingido a agua!
+	  if(opponent.matrix[i][j].shot > 0){  //Mostrar os tiros feitos pelo adversário caso tenha atingido a agua!
 	    printf("%3d", 3);
 	  }else{
 	    printf("%3d", 0);
 	  }
-
+	  
 	}else{
-
+	  
 	  int aux_row = 4 - (player.matrix[i][j].ship->row + 2 - i);
 	  int aux_col = 4 - (player.matrix[i][j].ship->col + 2 - j);
-
+	  
 	  if(player.matrix[i][j].ship->bitmap[aux_row][aux_col] == '2'){
 	    printf("%3c", 'X');
 	  }else{
@@ -127,19 +127,19 @@ void print_game(Game player, Game opponent){
 	      break;
 	    case(5):
 	      printf("%3c", 'E');
-	      break;
+	      break;  
 	    default:
 	      break;
 	    }
 	  }
-
+	  
 	}
       }
       printf("\t\t");
       printf("%3d", i+1);
 
       for(int j = 0; j < player.size; j++) {
-        printf("%3d", opponent.matrix[i][j].shot);
+        printf("%3d", player.matrix[i][j].shot);
       }
 
       printf("\n");
@@ -175,7 +175,7 @@ void free_memory(Game *player1, Game *player2, int num){
     free(player1->ships[i].bitmap);
     free(player2->ships[i].bitmap);
   }
-
+  
   //liberta espaço em memoria do array que guardava os navios
   free(player1->ships);
   free(player2->ships);

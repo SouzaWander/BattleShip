@@ -2,11 +2,11 @@
 #define BARCOS_H
 
 typedef struct{
-  int type;
-  char **bitmap;
-  int row, col, dim;
-  int rot;
-  int shot_count;
+  int type; //Indica o tipo de barco
+  char **bitmap; //Bitmap
+  int row, col, dim; 
+  int rot; //Indica a rotacao
+  int shot_count; //Indica o numero de vezes que foi atingida
 }Ship;
 
 //Aloca memoria para o bitmap do barco e define o bitmap, dim e shot_count

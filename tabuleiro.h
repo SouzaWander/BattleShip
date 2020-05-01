@@ -3,7 +3,7 @@
 
 typedef struct{
   Ship *ship;
-  int shot;
+  int shot; 
 }Cell;
 
 typedef struct{
@@ -19,7 +19,6 @@ void create_table(Game *player);
 void print_table(Game player);
 //Para fazer print das matrizes ao jogar
 void print_game(Game player, Game opponent);
-//void print_aut(Game player);
 //Liberta toda a memoria alocada
 void free_memory(Game *player1, Game *player2, int num);
 

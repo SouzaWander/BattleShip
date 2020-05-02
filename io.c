@@ -3,6 +3,12 @@
 #include "barcos.h"
 #include "tabuleiro.h"
 
+//Limpa buffer do scanf
+void clean_buffer(){
+  char c;
+  while((c= getchar()) != '\n' && c != EOF);
+}
+
 /*
   Verifica se todos os tipos de barcos tem pelo menos 1
   e retorna o total de barcos inseridos
@@ -95,14 +101,33 @@ se pode ser inserido e caso seja, o barco é inserido.
 */
 void insert_ships(Game *player, int flag){
 
+  int test0;
+  int test1;
+  int test2;
+  
   if(flag == 0){
     printf("Vamos agora comecar a inserir os barcos no tabuleiro segundo a ordem escolhida.\n\n");
     for(int i = 0; i < player->num_ships; i++){
       do{
         print_table(*player);
         printf("\nCoordenadas do barco %d do tipo %d e a sua rotacao (0, 90, 180, 270, 360): ", i+1, player->ships[i].type);
-        scanf("%d %d %d", &player->ships[i].row, &player->ships[i].col, &player->ships[i].rot);
-        player->ships[i].row--;
+        test0 = scanf("%d", &player->ships[i].row);
+	clean_buffer();
+	test1 = scanf("%d", &player->ships[i].col);
+	clean_buffer();
+	test2 = scanf("%d", &player->ships[i].rot);
+	clean_buffer();
+	while(test0 == 0 || test1 == 0 || test2 == 0 || player->ships[i].rot != 0 || player->ships[i].rot != 90 || player->ships[i].rot != 180 || player->ships[i].rot != 270 || player->ships[i].rot != 360){
+	  printf("\nCoordenadas invalidas! Coordenadas do barco %d do tipo %d e a sua rotacao (0, 90, 180, 270, 360): ", i+1, player->ships[i].type);
+	  test0 = scanf("%d", &player->ships[i].row);
+	  clean_buffer();
+	  test1 = scanf("%d", &player->ships[i].col);
+	  clean_buffer();
+	  test2 = scanf("%d", &player->ships[i].rot);
+	  clean_buffer();
+	}
+
+	player->ships[i].row--;
         player->ships[i].col--;
         rotate(&player->ships[i]);
       }while(add_ship_table(&player->ships[i], player, flag) == -1);
@@ -184,3 +209,5 @@ int aim_fire(Game *player, int row, int col){
   }
   return 0;
 }
+
+

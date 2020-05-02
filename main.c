@@ -22,11 +22,12 @@ int main(){
   printf("\nPressione:\n1- Colocacao manual\n2- Colocacao automatica\nOutra tecla- Exit\n");
 
   test = scanf("%d", &option); //Escolha da opcao no menu
-
+  clean_buffer();
+  
   while(test == 0){
     printf("Insira uma opcao valida:");
-    fflush(stdin);
     test = scanf("%d", &option);
+    clean_buffer();
   }
 
   //Caso seja acionada a colocacao manual
@@ -34,11 +35,13 @@ int main(){
 
     printf("\nInsira o tamanho do tabuleiro entre 20 e 40: ");
 
-    scanf("%d", &player1.size); //Tamanho da matriz
+    test = scanf("%d", &player1.size); //Tamanho da matriz
+    clean_buffer();
     
-    while(player1.size < 20 || player1.size > 40){
+    while(player1.size < 20 || player1.size > 40 || test == 0){
       printf("Por favor insira um numero entre 20 e 40: ");
-      scanf("%d", &player1.size); //Tamanho da matriz
+      test = scanf("%d", &player1.size); //Tamanho da matriz
+      clean_buffer();
     }
     
     ships_matrix = (player1.size*player1.size) / 25; //Calculo do numero maximo de navios
@@ -48,11 +51,13 @@ int main(){
     
     printf("\nAlgumas regras de escolha:\n1- No minimo tem de escolher 1 barco de cada tipo.\n2- O numero total de barcos nao pode exceder %d.\nInsira o numero de barcos a colocar no tabuleiro: ", ships_matrix);
     
-    scanf("%d", &num); //Numero de barcos a inserir
+    test = scanf("%d", &num); //Numero de barcos a inserir
+    clean_buffer();
     
-    while(num < 5 || num > ships_matrix){
+    while(num < 5 || num > ships_matrix || test == 0){
       printf("\nNumero insuficiente para incluir todos os tipos de barco ou o numero excede o limite permitido!!\nQuantos barcos vao querer no tabuleiro: ");
-      scanf("%d", &num); //Numero de barcos a inserir
+      test = scanf("%d", &num); //Numero de barcos a inserir
+      clean_buffer();
     }
     
     player1.num_ships = num;
@@ -68,7 +73,14 @@ int main(){
       
       for(int i = 0; i < 5; i++){
 	printf("Numero de barcos do tipo %d: ", i+1);
-	scanf("%d", &num_type[i]);
+	test = scanf("%d", &num_type[i]);
+	clean_buffer();
+
+	while(test == 0){
+	  printf("Numero de barcos do tipo %d: ", i+1);
+	  test = scanf("%d", &num_type[i]);
+	  clean_buffer();
+	}	
       }
       printf("\n");
     }while(check(num_type) != player1.num_ships); //A funcao check vai verificar se todos os tipos estao com barcos e se a soma = num_ships
@@ -164,6 +176,7 @@ int main(){
   int y;
   int turn = 1;
   int res;
+  int test1;
   
   printf("\nVez do Player%d\n", turn);
   print_game(player1, player2);
@@ -171,9 +184,22 @@ int main(){
     
     do{ //Pedir as coordenadas de tiro ao utilizador
       printf("\nEscolha as coordeadas do tiro (row, col): ");
-      scanf("%d %d", &y, &x);
+      test = scanf("%d", &y);
+      clean_buffer();
+      test1 = scanf("%d", &x);
+      clean_buffer();
+
+      while(test == 0 || test1 == 0){
+	printf("Coordenadas invalidas, escolha as coordeadas do tiro (row, col):");
+	test = scanf("%d", &y);
+	clean_buffer();
+	test1 = scanf("%d", &x);
+	clean_buffer();
+      }
+      
       x--;
       y--;
+      
     }while(inside_table(&player1, y, x));
     //Como as matrizes tem o mesmo size verificamos só para o player1 se as coordenadas sao validas ou nao;
 

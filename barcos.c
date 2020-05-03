@@ -8,6 +8,11 @@ void create_ship(Ship *ship, int ind){
     ship->bitmap[i] = (char*) calloc (5, sizeof(char)); //Colunas
   }
 
+  for(int i = 0; i < 5; i++){
+    for(int j = 0; j < 5; j++){
+      ship->bitmap[i][j] = '0';
+    }
+  }
   switch (ind) {
     case(1):
       ship->bitmap[2][2] = '1';
@@ -53,19 +58,19 @@ void create_ship(Ship *ship, int ind){
 
 //Faz a rotação dos barcos de 90 em 90 graus ate chegar a rotacao final
 void rotate(Ship *ship){
-  int aux[5][5];
+  char aux[5][5];
   if(ship->rot == 0 || ship->rot == 90 || ship->rot == 180 ||  ship->rot == 270 || ship->rot == 360){
     //poe todos os valores da matriz aux para zero
     for(int k = 0 ; k < ship->rot/90; k++){
       for(int i = 0; i < 5; i++){
 	for(int j = 0; j < 5; j++){
-	  aux[i][j] = 0;
+	  aux[i][j] = '0';
 	}
       }
       //rotação 90
       for(int i = 0; i < 5; i++){
         for(int j = 0; j < 5; j++){
-          if(ship->bitmap[i][j] != 0){
+          if(ship->bitmap[i][j] != '0'){
             aux[4-j][i] = ship->bitmap[i][j];
           }
         }
@@ -74,10 +79,10 @@ void rotate(Ship *ship){
       if(ship->rot > 0){
         for(int i = 0; i < 5; i++){
           for(int j = 0; j < 5; j++){
-            if(aux[i][j] == 0){
-	      ship->bitmap[i][j] = 0;
+            if(aux[i][j] == '0'){
+	      ship->bitmap[i][j] = '0';
             }else{
-              ship->bitmap[i][j] = 1;
+              ship->bitmap[i][j] = '1';
             }
           }
         }

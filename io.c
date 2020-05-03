@@ -40,7 +40,7 @@ int inside_table(Game *player, int row, int col){
 }
 
 /*
- Verifica se a posicao está dentro dos limites 
+ Verifica se a posicao está dentro dos limites
  e se nao ha outro barco naquela posicao
  Flag 0 -> Introducao Manual
  Flag 1 -> Introducao Automatica
@@ -48,12 +48,12 @@ int inside_table(Game *player, int row, int col){
 static int check_table(Ship *ship, Game *player, int flag){
   for(int i = 0; i < 5; i++){
     for (int j = 0; j < 5; j++) {
-      if(ship->bitmap[i][j] != 0){
+      if(ship->bitmap[i][j] != '0'){
         if(inside_table(player,ship->row-2+i,ship->col-2+j) == -1){
 	  if(flag == 0) printf("Erro: posicao fora dos limites\n");
 	  return -1;
         }
-	
+
         if(player->matrix[ship->row-2+i][ship->col-2+j].ship != NULL){
 	  if(flag == 0) printf("Posicao ja ocupada por outro barco!\n");
 	  return -1;
@@ -82,7 +82,7 @@ static int add_ship_table(Ship *ship, Game *player, int flag){
 
   for(int i = 0; i < 5; i++){
     for(int j = 0; j < 5; j++){
-      if(ship->bitmap[i][j] != 0){
+      if(ship->bitmap[i][j] != '0'){
           player->matrix[ship->row-2+i][ship->col-2+j].ship = ship;
       }
     }
@@ -93,9 +93,9 @@ static int add_ship_table(Ship *ship, Game *player, int flag){
 
 
 /*
-  Pede as coordenadas e a rotacao do barco ao jogador. 
-  Realiza a rotacao do barco e vai para a funcao add_ship_table verificar 
-se pode ser inserido e caso seja, o barco é inserido. 
+  Pede as coordenadas e a rotacao do barco ao jogador.
+  Realiza a rotacao do barco e vai para a funcao add_ship_table verificar
+se pode ser inserido e caso seja, o barco é inserido.
   Flag 0 -> Introducao Manual
   Flag 1 -> Introducao Automatica
 */
@@ -103,7 +103,7 @@ void insert_ships(Game *player, int flag){
 
   int test;
 
-  
+
   if(flag == 0){
     printf("Vamos agora comecar a inserir os barcos no tabuleiro segundo a ordem escolhida.\n\n");
     for(int i = 0; i < player->num_ships; i++){
@@ -164,7 +164,7 @@ void insert_ships(Game *player, int flag){
 
 
 /*
-  Analisa os tiros, se acertou na agua, num barco ou se a posicao já tinha 
+  Analisa os tiros, se acertou na agua, num barco ou se a posicao já tinha
 sido atingida. Alterando os valores necessarios
 */
 int aim_fire(Game *player, int row, int col){
@@ -200,5 +200,3 @@ int aim_fire(Game *player, int row, int col){
   }
   return 0;
 }
-
-

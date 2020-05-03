@@ -8,6 +8,8 @@ int inside_table(Game *player, int row, int col);
 //Pede as coordenadas e a rotacao do barco ao jogador e insere caso seja possivel
 void insert_ships(Game *player, int flag);
 //Analisa os tiros
-int aim_fire(Game *player, int row, int col); 
+int aim_fire(Game *player, int row, int col);
+//Funcao para libertar buffer do scanf
+void clean_buffer();
 
 #endif

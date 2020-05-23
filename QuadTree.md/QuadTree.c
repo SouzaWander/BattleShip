@@ -145,6 +145,35 @@ static int CheckQuadTree(struct NODE *no, int i, int j){
 }
 */
 
+static int CheckQuadTree(struct NODE** root, int x, int y,  int X, int Y, int Lx, int Ly){
+  struct NODE* node = CreatePNode(2);//para podermos usar a função PRCompare
+  node->x = x;
+  node->y = y;
+  struct NODE* T = (*root);
+  int q = PRCompare(node, X, Y);
+
+  while(T->Pos[q] != NULL && T->Pos[q]->colour == 1){
+    T = T->Pos[q];
+    X = X + Sx[q]*Lx;
+    Lx = Lx/2;
+    Y = Y + Sy[q]*Ly;
+    Ly = Ly/2;
+    q = PRCompare(node,X,Y);
+  }
+
+  if(T->Pos[q] == NULL){// tem espaço
+    return 0;
+
+  }
+  else if(T->x != x || T->y != y){//o quadrante está ocupado mas a posição que queremos não
+    return 0;
+  }
+  else{
+    return -1;
+  }
+  //liberta a memoria reservada para o node
+}
+
 
 void print_table(QuadTree player){
 

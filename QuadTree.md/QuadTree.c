@@ -11,6 +11,7 @@ struct NODE{
   //Cell Value;
 };
 
+
 /*
 typedef struct{
   int x;
@@ -35,8 +36,30 @@ struct NODE * CreatePNode(int colour){
   for(int i = 0; i < 4; i++) new->Pos[i] = NULL;
   new->colour = colour;
 
+  if(colour == 1){    //Para indicar quando e no intermedio
+    new->x = -1;
+    new->y = -1;
+  }
+  
   return new;
 }
+
+
+void PrintQuadTree(struct NODE *no){
+
+  if(no == NULL){
+    printf("Null ");
+    return;
+  }
+
+  printf("(%d,%d) ", no->x, no->y);
+  
+  PrintQuadTree(no->Pos[0]);
+  PrintQuadTree(no->Pos[1]);
+  PrintQuadTree(no->Pos[2]);
+  PrintQuadTree(no->Pos[3]);
+}
+
 
 /*
 1 = GRAY (nonleaf node)
@@ -50,8 +73,6 @@ struct NODE * CreatePNode(int colour){
  * SW = 2
  * SE = 3
  */
-
-
 int PRCompare(struct NODE *P, int X, int Y){
 
   if(P->x < X){

@@ -8,6 +8,7 @@ int main(){
   struct NODE *p = CreatePNode(2);
   struct NODE *no2 = CreatePNode(2);
   struct NODE *no3 = CreatePNode(2);
+  struct NODE *no4 = CreatePNode(2);
   no->x = 10;
   no->y = 10;
   PRInsert(no, &Q.root, 8, 8, 16, 16);
@@ -24,8 +25,18 @@ int main(){
   no3->x = 15;
   no3->y = 2;
   PRInsert(no3, &Q.root, 8, 8, 16, 16);
+
+  no4->x = 13;
+  no4->y = 1;
+  PRInsert(no4, &Q.root, 8, 8, 16, 16);
   
   printf("\nroot: (%d,%d) %d\n", Q.root->x, Q.root->y, Q.root->colour);
+
+
+  printf("\n\n\n\nPrintTree: ");
+  PrintQuadTree(Q.root);
+
+  /*
   if(Q.root->Pos[3]->Pos[0] != NULL){
     printf("NW DIFERENT NULL\n");
   }
@@ -42,6 +53,7 @@ int main(){
     printf("SE DIFERENT NULL\n");
   }
   
+  */
   
   return 0;
 }

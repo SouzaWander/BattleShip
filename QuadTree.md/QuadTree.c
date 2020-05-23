@@ -1,33 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "barcos.h"
+#include "QuadTree.h"
 
-float Sx[4] = {-0.25, 0.25, -0.25, 0.25};
-float Sy[4] = {0.25, 0.25, -0.25, -0.25};
-
-struct NODE{
-  struct NODE * Pos[4];
-  int x, y;
-  int colour;
-  //Cell Value;
-};
-
-
-/*
-typedef struct{
-  int x;
-  int y;
-}Point;
-*/
-
-typedef struct{
-  struct NODE *root;
-}QuadTree;
-
-QuadTree make(){
-  QuadTree new;
-  new.root = (struct NODE *)malloc(sizeof(struct NODE));
-  new.root = NULL;
-  return new;
+void create_table(QuadTree * player){
+  player->root = (struct NODE *)malloc(sizeof(struct NODE));
+  player->root = NULL;
+  player->ships = (Ship * ) malloc(sizeof(Ship) * player->num_ships);
 }
 
 struct NODE * CreatePNode(int colour){
@@ -44,28 +23,10 @@ struct NODE * CreatePNode(int colour){
   return new;
 }
 
-
-void PrintQuadTree(struct NODE *no){
-
-  if(no == NULL){
-    printf("Null ");
-    return;
-  }
-
-  printf("(%d,%d) ", no->x, no->y);
-  
-  PrintQuadTree(no->Pos[0]);
-  PrintQuadTree(no->Pos[1]);
-  PrintQuadTree(no->Pos[2]);
-  PrintQuadTree(no->Pos[3]);
-}
-
-
 /*
 1 = GRAY (nonleaf node)
 2 = White (contais a data point / leaf)
 */
-
 
 /*
  * NW = 0
@@ -73,7 +34,7 @@ void PrintQuadTree(struct NODE *no){
  * SW = 2
  * SE = 3
  */
-int PRCompare(struct NODE *P, int X, int Y){
+static int PRCompare(struct NODE *P, int X, int Y){
 
   if(P->x < X){
     if(P->y < Y){
@@ -140,5 +101,92 @@ void PRInsert(struct NODE *no, struct NODE **root, int X, int Y, int Lx, int Ly)
 
     T->Pos[q] = no;
     T->Pos[qu] = U;
+  }
+}
+
+
+void PrintQuadTree(struct NODE *no){
+
+  if(no == NULL){
+    printf("Null ");
+    return;
+  }
+
+  printf("(%d,%d) ", no->x, no->y);
+  
+  PrintQuadTree(no->Pos[0]);
+  PrintQuadTree(no->Pos[1]);
+  PrintQuadTree(no->Pos[2]);
+  PrintQuadTree(no->Pos[3]);
+}
+
+
+/* Temos de implementar esta funcao
+ * Vai verificar se o "ponto" esta na QuadTree
+ * - Se tiver retorna o type associado ao ponto
+ * - Caso contrario retorna -1
+ */
+/*
+static int CheckQuadTree(struct NODE *no, int i, int j){
+
+  if(no == NULL){
+    printf("Null ");
+    return -1;
+  }
+
+  printf("(%d,%d) ", no->x, no->y);
+  
+  PrintQuadTree(no->Pos[0]);
+  PrintQuadTree(no->Pos[1]);
+  PrintQuadTree(no->Pos[2]);
+  PrintQuadTree(no->Pos[3]);
+
+  
+}
+*/
+
+
+void print_table(QuadTree player){
+
+  int type;
+  
+  printf("   ");
+  for(int i = 1; i <= player.size; i++){
+    printf("%3d", i);
+  }
+  
+  printf("\n");
+  
+
+  for(int i = 0; i < player.size; i++){
+    printf("%3d  ", i+1);
+ 
+    for(int j = 0; j < player.size; j++){
+
+      if((type = CheckQuadTree(Q.root, i, j)) == -1){
+	printf("0  ");
+      }else{
+	switch(type){
+	case(1):
+	  printf("%c  ", 'A');
+	  break;
+	case(2):
+	  printf("%c  ", 'B');
+	  break;
+	case(3):
+	  printf("%c  ", 'C');
+	  break;
+	case(4):
+	  printf("%c  ", 'D');
+	  break;
+	case(5):
+	  printf("%c  ", 'E');
+	  break;
+	default:
+	  break;
+	}
+      }
+    }
+    printf("\n");
   }
 }

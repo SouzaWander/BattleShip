@@ -2,19 +2,28 @@
 #include <stdlib.h>
 #include <time.h>
 #include "barcos.h"
+#include "QuadTree.h"
 #include "tabuleiro.h"
 #include "io.h"
 
+
 int main(){
 
-
-  #ifdef QUAD
+#ifdef QUAD
+  
   QuadTree player1;
   QuadTree player2;
-  #else
+
+  int X, Y;
+  int Lx = 32;
+  int Ly = 32;
+
+#else
+
   Game player1; //Jogador 1
   Game player2; //Jogador 2
-  #endif
+
+#endif
   
 
   int num; //Pedir num_ships
@@ -23,6 +32,7 @@ int main(){
   int ships_matrix; //Numero de barcos possíveis na matrix
   int aux = 0; //Variavel aux para criar varios barcos do mesmo tipo usado no ciclo for;
   int test = 0; //Para testar os scanfs
+ 
 
   //Menu
   printf("\n****   *****  *     *\t\t*       *  *  *      *  ****   *****  **\n*   *  *      * * * *\t\t *     *   *  * *    *  *   *  *   *  **\n****   *****  *  *  *\t\t  *   *    *  *  *   *  *   *  *   *  **\n*   *  *      *     *\t\t   * *     *  *   *  *  *   *  *   *    \n****   *****  *     *\t\t    *      *  *    * *  ****   *****  **\n");
@@ -52,6 +62,16 @@ int main(){
       clean_buffer();
     }
 
+    #ifdef QUAD
+    while(Lx < player1.size){
+      Lx = Lx * 2;
+      Ly = Ly * 2;
+    }
+
+    X = Lx/2;
+    Y = Lx/2;
+    #endif
+    
     ships_matrix = (player1.size*player1.size) / 25; //Calculo do numero maximo de navios
     player2.size = player1.size;
 
@@ -118,13 +138,24 @@ int main(){
     /* Para inserir os navios na matriz vamos a uma funcao onde sera
      * pedido os valores necessarios ao utilizador para inserir o navio
      */
+
+    
     printf("\n\nPlayer 1:\n");
+    #ifdef MAT
     insert_ships(&player1, 0);
-
+    #else
+    insert_ships(&player1, X, Y, Lx, Ly, 0);
+    #endif
+    
     printf("\n\nPlayer 2:\n");
-    insert_ships(&player2, 0);
-
+    #ifdef MAT
+    insert_ships(&player1, 0);
+    #else
+    insert_ships(&player2, X, Y, Lx, Ly, 0);
+    #endif
+    
   }else if(option == 2){ //Caso seja acionada a opcao automatica
+    /*
     srand(time(0));
 
     //Damos valores random as variaveis
@@ -173,12 +204,12 @@ int main(){
 
     insert_ships(&player1, 1);
     insert_ships(&player2, 1);
-
+    */
   }else{ //Caso seja acionada a opcao de sair do jogo
     printf("Ficamos a sua espera ;)\n");
     return 0;
   }
-
+  /*
   /////////////////// JOGO //////////////////////////////////
 
   printf("\n*       *   *      *     *  ****  ****        ****  ****  *****      *      ****  * *\n *     *   * *     * * * *  *  *  *              *  *  *  *         * *     *  *  * *\n  *   *   *****    *  *  *  *  *  ****           *  *  *  * ***    *****    ****  * *\n   * *   *     *   *     *  *  *     *        *  *  *  *  *   *   *     *   **       \n    *   *       *  *     *  ****  ****        ****  ****  *****  *       *  * *   * *\n");
@@ -207,11 +238,12 @@ int main(){
     }while(inside_table(&player1, y, x));
 
     //Como as matrizes tem o mesmo size verificamos só para o player1 se as coordenadas sao validas ou nao;
-
+    */
     /* Aqui tratamos dos turnos
      * Usamos o aim_fire para verificar o resultado do tiro e fazer as alteracoes necessaria
      * Verificamos se o jogo acabou, o num_ships do adversario == 0
      */
+  /*
     if(turn == 1){
       res = aim_fire(&player2, y, x);
       if(res == -1){
@@ -258,6 +290,6 @@ int main(){
       turn = 2;
     }
   }
-
+  */
   return 0;
 }

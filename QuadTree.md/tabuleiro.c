@@ -1,3 +1,5 @@
+#ifdef MAT
+  
 #include <stdio.h>
 #include <stdlib.h>
 #include "barcos.h"
@@ -172,3 +174,5 @@ void free_memory(Game *player1, Game *player2, int num){
   free(player1->matrix);
   free(player2->matrix);
 }
+
+#endif

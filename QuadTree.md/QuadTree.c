@@ -1,3 +1,5 @@
+#ifdef QUAD
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "barcos.h"
@@ -145,11 +147,11 @@ static int CheckQuadTree(struct NODE *no, int i, int j){
 }
 */
 
-static int CheckQuadTree(struct NODE** root, int x, int y,  int X, int Y, int Lx, int Ly){
+int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
   struct NODE* node = CreatePNode(2);//para podermos usar a função PRCompare
   node->x = x;
   node->y = y;
-  struct NODE* T = (*root);
+  struct NODE* T = root;
   int q = PRCompare(node, X, Y);
 
   while(T->Pos[q] != NULL && T->Pos[q]->colour == 1){
@@ -219,3 +221,5 @@ void print_table(QuadTree player){
     printf("\n");
   }
 }
+
+#endif

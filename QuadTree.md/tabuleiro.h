@@ -1,6 +1,8 @@
 #ifndef  TABULEIRO_H
 #define  TABULEIRO_H
 
+#ifdef MAT
+
 typedef struct{
   Ship *ship;
   int shot; 
@@ -22,4 +24,5 @@ void print_game(Game player, Game opponent);
 //Liberta toda a memoria alocada
 void free_memory(Game *player1, Game *player2, int num);
 
+#endif
 #endif

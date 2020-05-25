@@ -1,6 +1,8 @@
 #ifndef  QUADTREE_H
 #define  QUADTREE_H
 
+#ifdef QUAD
+
 float Sx[4] = {-0.25, 0.25, -0.25, 0.25};
 float Sy[4] = {0.25, 0.25, -0.25, -0.25};
 
@@ -37,4 +39,7 @@ void print_table(QuadTree player);
 //Liberta toda a memoria alocada
 //void free_memory(Game *player1, Game *player2, int num);
 
+int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
+
+#endif
 #endif

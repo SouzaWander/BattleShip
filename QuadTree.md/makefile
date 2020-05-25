@@ -6,16 +6,16 @@ main: main.o barcos.o tabuleiro.o io.o
 	gcc -Wall $^ -o $@
 
 main.o: main.c
-	gcc -c $(CFLAGS) $<
+	gcc -DQUAD -c  $(CFLAGS) $<
 
 barcos.o: barcos.c
-	gcc -c $(CFLAGS) $<
+	gcc -DQUAD -c $(CFLAGS) $<
 
 tabuleiro.o: tabuleiro.c
-	gcc -c $(CFLAGS) $<
+	gcc -DQUAD -c $(CFLAGS) $<
 
 io.o: io.c
-	gcc -c $(CFLAGS) $<
+	gcc -DQUAD -c $(CFLAGS) $<
 
 clean:
 	rm *.o main

@@ -5,6 +5,9 @@
 #include "barcos.h"
 #include "QuadTree.h"
 
+float Sx[4] = {-0.25, 0.25, -0.25, 0.25};
+float Sy[4] = {0.25, 0.25, -0.25, -0.25};
+
 void create_table(QuadTree * player){
   player->root = (struct NODE *)malloc(sizeof(struct NODE));
   player->root = NULL;
@@ -148,35 +151,33 @@ static int CheckQuadTree(struct NODE *no, int i, int j){
 */
 
 int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
-  struct NODE* node = CreatePNode(2);//para podermos usar a função PRCompare
-  node->x = x;
-  node->y = y;
-  struct NODE* T = root;
-  int q = PRCompare(node, X, Y);
-
-  while(T->Pos[q] != NULL && T->Pos[q]->colour == 1){
-    T = T->Pos[q];
+  
+  if(root == NULL){
+    return 0;
+  }
+ 
+  struct NODE* no = CreatePNode(2);
+  no->x = x;
+  no->y = y;
+  int q = PRCompare(no, X, Y);
+  
+  while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
+    root = root->Pos[q];
     X = X + Sx[q]*Lx;
     Lx = Lx/2;
     Y = Y + Sy[q]*Ly;
     Ly = Ly/2;
-    q = PRCompare(node,X,Y);
+    q = PRCompare(no,X,Y);
   }
+  
+  if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)) return -1;
 
-  if(T->Pos[q] == NULL){// tem espaço
-    return 0;
+  return 0;
 
-  }
-  else if(T->x != x || T->y != y){//o quadrante está ocupado mas a posição que queremos não
-    return 0;
-  }
-  else{
-    return -1;
-  }
   //liberta a memoria reservada para o node
 }
 
-
+/*
 void print_table(QuadTree player){
 
   int type;
@@ -221,5 +222,6 @@ void print_table(QuadTree player){
     printf("\n");
   }
 }
+*/
 
 #endif

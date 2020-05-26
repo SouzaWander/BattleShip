@@ -1,10 +1,7 @@
-#ifndef  QUADTREE_H
-#define  QUADTREE_H
-
 #ifdef QUAD
 
-float Sx[4] = {-0.25, 0.25, -0.25, 0.25};
-float Sy[4] = {0.25, 0.25, -0.25, -0.25};
+#ifndef  QUADTREE_H
+#define  QUADTREE_H
 
 typedef struct{
   Ship *ship;

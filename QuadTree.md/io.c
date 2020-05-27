@@ -233,9 +233,7 @@ static int check_table(Ship *ship, QuadTree *player, int X, int Y, int Lx, int L
 	  return -1;
         }
 
-	//Esta função está errada!!
-	if(CheckQuadTree(player->root,ship->row-2+i,ship->col-2+j,X,Y,Lx,Ly) == -1){
-	  printf("Ola");
+	if(CheckQuadTree(player->root,ship->row-2+i,ship->col-2+j,X,Y,Lx,Ly) != 0){
 	  if(flag == 0) printf("Posicao ja ocupada por outro barco!\n");
 	  return -1;
         }
@@ -254,20 +252,16 @@ static int add_ship_table(Ship *ship, QuadTree *player, int X, int Y, int Lx, in
     return -1;
   }
   
-  
   for(int i = 0; i < 5; i++){
     for(int j = 0; j < 5; j++){
       if(ship->bitmap[i][j] != '0'){
 	struct NODE* node = CreatePNode(2);
+	//node->Value.ship = ship;
 	node->x = ship->row-2+i;
 	node->y = ship->col-2+j;
-	//printf("\n(%d,%d)\n", node->x, node->y);
 	PRInsert(node, &player->root, X, Y, Lx, Ly);
-	PrintQuadTree(player->root);
-	//printf("\n\n\n\n");
       }
     }
-
   }
   return 0;
 }
@@ -280,7 +274,7 @@ void insert_ships(QuadTree *player, int X, int Y, int Lx, int Ly, int flag){
     printf("Vamos agora comecar a inserir os barcos no tabuleiro segundo a ordem escolhida.\n\n");
     for(int i = 0; i < player->num_ships; i++){
       do{
-        //print_table(*player);
+        print_table(*player, X, Y, Lx, Ly);
         printf("\nCoordenadas do barco %d do tipo %d e a sua rotacao (0, 90, 180, 270, 360): ", i+1, player->ships[i].type);
         test = scanf("%d %d %d", &player->ships[i].row , &player->ships[i].col , &player->ships[i].rot);
 	clean_buffer();
@@ -295,7 +289,7 @@ void insert_ships(QuadTree *player, int X, int Y, int Lx, int Ly, int flag){
 
       printf("\n");
     }
-    //print_table(*player);
+    print_table(*player, X, Y, Lx, Ly);
 
   }else{
 

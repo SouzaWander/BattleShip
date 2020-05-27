@@ -30,7 +30,7 @@ struct NODE * CreatePNode(int colour);
 //Insere um novo no na arvore
 void PRInsert(struct NODE *no, struct NODE **root, int X, int Y, int Lx, int Ly);
 //Para fazer print da matriz ao colocar os barcos
-void print_table(QuadTree player);
+void print_table(QuadTree player, int X, int Y, int Lx, int Ly);
 //Para fazer print das matrizes ao jogar
 //void print_game(QuadTree player, QuadTree opponent);
 //Liberta toda a memoria alocada

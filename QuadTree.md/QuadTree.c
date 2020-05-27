@@ -125,60 +125,48 @@ void PrintQuadTree(struct NODE *no){
   PrintQuadTree(no->Pos[3]);
 }
 
-
-/* Temos de implementar esta funcao
- * Vai verificar se o "ponto" esta na QuadTree
- * - Se tiver retorna o type associado ao ponto
- * - Caso contrario retorna -1
- */
-/*
-static int CheckQuadTree(struct NODE *no, int i, int j){
-
-  if(no == NULL){
-    printf("Null ");
-    return -1;
-  }
-
-  printf("(%d,%d) ", no->x, no->y);
-  
-  PrintQuadTree(no->Pos[0]);
-  PrintQuadTree(no->Pos[1]);
-  PrintQuadTree(no->Pos[2]);
-  PrintQuadTree(no->Pos[3]);
-
-  
-}
-*/
-
 int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
-  
-  if(root == NULL){
+
+    struct NODE* no = CreatePNode(2);
+    no->x = x;
+    no->y = y;
+    int q = PRCompare(no, X, Y);
+
+    if(root == NULL){
+      return 0;
+    }else if(root->colour != 1){
+      if((no->x == root->x) && (no->y == root->y)){
+        return root->Value.ship->type;
+      }
+    }
+    if(root->Pos[q] == NULL){
+      return 0;
+    }
+
+    while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
+      root = root->Pos[q];
+      X = X + Sx[q]*Lx;
+      Lx = Lx/2;
+      Y = Y + Sy[q]*Ly;
+      Ly = Ly/2;
+      q = PRCompare(no,X,Y);
+    }
+
+    if(root->Pos[q] == NULL){
+      return 0;
+    }
+
+    if(root->Pos[q]->colour != 1){
+      if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)){
+        return root->Value.ship->type;
+      }
+    }
     return 0;
-  }
- 
-  struct NODE* no = CreatePNode(2);
-  no->x = x;
-  no->y = y;
-  int q = PRCompare(no, X, Y);
-  
-  while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
-    root = root->Pos[q];
-    X = X + Sx[q]*Lx;
-    Lx = Lx/2;
-    Y = Y + Sy[q]*Ly;
-    Ly = Ly/2;
-    q = PRCompare(no,X,Y);
-  }
-  
-  if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)) return -1;
-
-  return 0;
-
   //liberta a memoria reservada para o node
 }
 
-/*
-void print_table(QuadTree player){
+
+void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 
   int type;
   
@@ -190,12 +178,12 @@ void print_table(QuadTree player){
   printf("\n");
   
 
-  for(int i = 0; i < player.size; i++){
-    printf("%3d  ", i+1);
+  for(int i = 1; i <= player.size; i++){
+    printf("%3d  ", i);
  
-    for(int j = 0; j < player.size; j++){
+    for(int j = 1; j <= player.size; j++){
 
-      if((type = CheckQuadTree(Q.root, i, j)) == -1){
+      if((type = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly)) == 0){
 	printf("0  ");
       }else{
 	switch(type){
@@ -222,6 +210,6 @@ void print_table(QuadTree player){
     printf("\n");
   }
 }
-*/
+
 
 #endif

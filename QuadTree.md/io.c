@@ -256,7 +256,7 @@ static int add_ship_table(Ship *ship, QuadTree *player, int X, int Y, int Lx, in
     for(int j = 0; j < 5; j++){
       if(ship->bitmap[i][j] != '0'){
 	struct NODE* node = CreatePNode(2);
-	//node->Value.ship = ship;
+	node->Value.ship = ship;
 	node->x = ship->row-2+i;
 	node->y = ship->col-2+j;
 	PRInsert(node, &player->root, X, Y, Lx, Ly);

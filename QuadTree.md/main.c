@@ -25,7 +25,6 @@ int main(){
 
 #endif
   
-
   int num; //Pedir num_ships
   int num_type[5]; //Guarda o numero total de barcos de cada tipo
   int option;  //Serve para escolher no menu
@@ -33,7 +32,6 @@ int main(){
   int aux = 0; //Variavel aux para criar varios barcos do mesmo tipo usado no ciclo for;
   int test = 0; //Para testar os scanfs
  
-
   //Menu
   printf("\n****   *****  *     *\t\t*       *  *  *      *  ****   *****  **\n*   *  *      * * * *\t\t *     *   *  * *    *  *   *  *   *  **\n****   *****  *  *  *\t\t  *   *    *  *  *   *  *   *  *   *  **\n*   *  *      *     *\t\t   * *     *  *   *  *  *   *  *   *    \n****   *****  *     *\t\t    *      *  *    * *  ****   *****  **\n");
 
@@ -48,8 +46,7 @@ int main(){
     clean_buffer();
   }
 
-  //Caso seja acionada a colocacao manual
-  if(option == 1){
+  if(option == 1){  //Caso seja acionada a colocacao manual
 
     printf("\nInsira o tamanho do tabuleiro entre 20 e 40: ");
 
@@ -132,14 +129,9 @@ int main(){
       create_ship(&player2.ships[i], player2.ships[i].type);
     }
 
-
-    //--------------------------------ATE AQUI ACHO QUE ESTA TUDO BEM ---------------------------//
-    
     /* Para inserir os navios na matriz vamos a uma funcao onde sera
      * pedido os valores necessarios ao utilizador para inserir o navio
      */
-
-    
     printf("\n\nPlayer 1:\n");
     #ifdef MAT
     insert_ships(&player1, 0);
@@ -153,9 +145,10 @@ int main(){
     #else
     insert_ships(&player2, X, Y, Lx, Ly, 0);
     #endif
-    
+
+    //--------------------------------ATE AQUI ACHO QUE ESTA TUDO BEM ---------------------------//
   }else if(option == 2){ //Caso seja acionada a opcao automatica
-    /*
+ 
     srand(time(0));
 
     //Damos valores random as variaveis
@@ -167,6 +160,16 @@ int main(){
     player1.num_ships = (rand() % (ships_matrix-5+1)) + 5;
     player2.num_ships = player1.num_ships;
 
+    #ifdef QUAD
+    while(Lx < player1.size){
+      Lx = Lx * 2;
+      Ly = Ly * 2;
+    }
+
+    X = Lx/2;
+    Y = Lx/2;
+    #endif
+    
     //Cria a matriz alocando a memoria necessária
     create_table(&player1);
     create_table(&player2);
@@ -202,9 +205,22 @@ int main(){
       create_ship(&player2.ships[i], player2.ships[i].type);
     }
 
+    #ifdef MAT
     insert_ships(&player1, 1);
+    #else
+    insert_ships(&player1, X, Y, Lx, Ly, 1);
+    #endif
+
+    #ifdef MAT
     insert_ships(&player2, 1);
-    */
+    #else
+    insert_ships(&player2, X, Y, Lx, Ly, 1);
+    #endif
+
+    print_table(player1, X, Y, Lx, Ly);
+    printf("\n\n\n");
+    print_table(player2, X, Y, Lx, Ly);
+
   }else{ //Caso seja acionada a opcao de sair do jogo
     printf("Ficamos a sua espera ;)\n");
     return 0;

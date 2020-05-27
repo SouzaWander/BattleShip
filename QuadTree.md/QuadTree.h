@@ -20,6 +20,7 @@ typedef struct{
   int size;
   int num_ships;
   Ship *ships;
+  int X, Y, Lx, Ly;
 }QuadTree;
 
 

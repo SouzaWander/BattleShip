@@ -133,13 +133,16 @@ int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly
     int q = PRCompare(no, X, Y);
 
     if(root == NULL){
+      free(no);
       return 0;
     }else if(root->colour != 1){
       if((no->x == root->x) && (no->y == root->y)){
-        return root->Value.ship->type;
+	free(no);
+	return root->Value.ship->type;
       }
     }
     if(root->Pos[q] == NULL){
+      free(no);
       return 0;
     }
 
@@ -153,16 +156,19 @@ int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly
     }
 
     if(root->Pos[q] == NULL){
+      free(no);
       return 0;
     }
 
     if(root->Pos[q]->colour != 1){
       if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)){
-        return root->Value.ship->type;
+	free(no);
+        return root->Pos[q]->Value.ship->type;
       }
     }
+
+    free(no);
     return 0;
-  //liberta a memoria reservada para o node
 }
 
 
@@ -177,7 +183,6 @@ void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
   
   printf("\n");
   
-
   for(int i = 1; i <= player.size; i++){
     printf("%3d  ", i);
  

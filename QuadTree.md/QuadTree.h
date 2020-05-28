@@ -35,9 +35,8 @@ void print_table(QuadTree player, int X, int Y, int Lx, int Ly);
 void print_game(QuadTree player, int X, int Y, int Lx, int Ly);
 //Liberta toda a memoria alocada
 //void free_memory(Game *player1, Game *player2, int num);
-
-int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
-struct NODE* get_node(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
+struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
+//get_node(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
 
 #endif
 #endif

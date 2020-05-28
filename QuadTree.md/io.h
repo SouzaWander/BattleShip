@@ -15,11 +15,8 @@ void insert_ships(Game *player, int flag);
 //Analisa os tiros
 int aim_fire(Game *player, int row, int col);
 
-
 #else
 
-
-//Verifica se as coordenadas dadas pertencem ao tabuleiro ou não
 int inside_table(QuadTree *player, int row, int col);
 void insert_ships(QuadTree *player, int X, int Y, int Lx, int Ly, int flag);
 int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly);

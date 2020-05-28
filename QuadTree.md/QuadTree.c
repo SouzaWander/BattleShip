@@ -25,6 +25,7 @@ struct NODE * CreatePNode(int colour){
     new->y = -1;
   }
 
+  new->Value.shot = 0;
   return new;
 }
 
@@ -90,8 +91,7 @@ void PRInsert(struct NODE *no, struct NODE **root, int X, int Y, int Lx, int Ly)
 
   if( T->Pos[q] == NULL){
     T->Pos[q] = no;
-  }
-  else if((no->x == T->Pos[q]->x) && (no->y == T->Pos[q]->y)) return; //ja foi inserido
+  }else if((no->x == T->Pos[q]->x) && (no->y == T->Pos[q]->y)) return; //ja foi inserido
   else{
     U = T->Pos[q];
     do{
@@ -110,7 +110,6 @@ void PRInsert(struct NODE *no, struct NODE **root, int X, int Y, int Lx, int Ly)
   }
 }
 
-
 void PrintQuadTree(struct NODE *no){
 
   if(no == NULL){
@@ -126,8 +125,9 @@ void PrintQuadTree(struct NODE *no){
   PrintQuadTree(no->Pos[3]);
 }
 
-struct NODE* get_node(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
 
+
+struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
   if(root == NULL){
     return NULL;
   }
@@ -173,57 +173,9 @@ struct NODE* get_node(struct NODE *root, int x, int y,  int X, int Y, int Lx, in
   return NULL;
 }
 
-int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
-
-    struct NODE* no = CreatePNode(2);
-    no->x = x;
-    no->y = y;
-    int q = PRCompare(no, X, Y);
-
-    if(root == NULL){
-      free(no);
-      return 0;
-    }else if(root->colour != 1){
-      if((no->x == root->x) && (no->y == root->y)){
-	free(no);
-	if (root->colour == 3) return -1; //Para saber quando as cordenadas são de barcos ou tiros falhados
-	return root->Value.ship->type;
-      }
-    }
-    if(root->Pos[q] == NULL){
-      free(no);
-      return 0;
-    }
-
-    while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
-      root = root->Pos[q];
-      X = X + Sx[q]*Lx;
-      Lx = Lx/2;
-      Y = Y + Sy[q]*Ly;
-      Ly = Ly/2;
-      q = PRCompare(no,X,Y);
-    }
-
-    if(root->Pos[q] == NULL){
-      free(no);
-      return 0;
-    }
-
-    if(root->Pos[q]->colour != 1){
-      if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)){
-	free(no);
-	if(root->Pos[q]->colour == 3) return -1; //Para saber quando as cordenadas são de barcos ou tiros falhados
-        return root->Pos[q]->Value.ship->type;
-      }
-    }
-
-    free(no);
-    return 0;
-}
-
 void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 
-  int type;
+  struct NODE *no;
 
   printf("   ");
   for(int i = 1; i <= player.size; i++){
@@ -237,10 +189,11 @@ void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 
     for(int j = 1; j <= player.size; j++){
 
-      if((type = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly)) == 0){
+      no = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly);
+      if(no == NULL){
 	printf("0  ");
       }else{
-	switch(type){
+	switch(no->Value.ship->type){
 	case(1):
 	  printf("%c  ", 'A');
 	  break;
@@ -269,7 +222,6 @@ void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 //Para fazer print das matrizes ao jogar
 void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
 
-  int type;
   struct NODE* no;
   
   //Legenda
@@ -296,21 +248,21 @@ void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
     printf("%3d", i);
     
     for(int j = 1; j <= player.size; j++){
-      if((type = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly)) == -1){
-	printf("%3d", 3);
-      }else if(type == 0){
-	printf("%3d", 0);
-      }else{
 
-	no = get_node(player.root, i, j, X, Y, Lx, Ly);
-	
+      no = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly);
+      
+      if(no == NULL){
+	printf("%3d", 0);
+      }else if(no->colour == 3){
+	printf("%3d", 3);
+      }else{	
 	int aux_row = 4 - (no->Value.ship->row + 2 - i);
 	int aux_col = 4 - (no->Value.ship->col + 2 - j);
 	
 	if(no->Value.ship->bitmap[aux_row][aux_col] == '2'){
 	  printf("%3c", 'X');
 	}else{
-	  switch(type){
+	  switch(no->Value.ship->type){
 	  case(1):
 	    printf("%3c", 'A');
 	    break;
@@ -330,20 +282,17 @@ void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
 	    break;
 	  }
 	}
-	
       }
     }
     printf("\t\t");
     printf("%3d", i);
     
     for(int j = 1; j <= player.size; j++) {
-      no = get_node(player.root, i, j, X, Y, Lx, Ly);
+      no = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly);
       //printf("%3d", no->Value.shot);
     }
     
     printf("\n");
   }
 }
-
-
 #endif

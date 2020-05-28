@@ -133,20 +133,19 @@ int main(){
      * pedido os valores necessarios ao utilizador para inserir o navio
      */
     printf("\n\nPlayer 1:\n");
-    #ifdef MAT
+#ifdef MAT
     insert_ships(&player1, 0);
-    #else
+#else
     insert_ships(&player1, X, Y, Lx, Ly, 0);
-    #endif
-
+#endif
+    
     printf("\n\nPlayer 2:\n");
-    #ifdef MAT
-    insert_ships(&player1, 0);
-    #else
+#ifdef MAT
+    insert_ships(&player2, 0);
+#else
     insert_ships(&player2, X, Y, Lx, Ly, 0);
-    #endif
-
-    //--------------------------------ATE AQUI ACHO QUE ESTA TUDO BEM ---------------------------//
+#endif
+    
   }else if(option == 2){ //Caso seja acionada a opcao automatica
 
     srand(time(0));
@@ -216,10 +215,6 @@ int main(){
     #else
     insert_ships(&player2, X, Y, Lx, Ly, 1);
     #endif
-
-    print_table(player1, X, Y, Lx, Ly);
-    printf("\n\n\n");
-    print_table(player2, X, Y, Lx, Ly);
 
   }else{ //Caso seja acionada a opcao de sair do jogo
     printf("Ficamos a sua espera ;)\n");

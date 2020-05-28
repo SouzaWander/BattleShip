@@ -31,9 +31,7 @@ int check(int num_type[]){
 }
 
 
-
 #ifdef MAT
-
 
 //Verifica se as coordenadas dadas pertencem ao tabuleiro ou não
 int inside_table(Game *player, int row, int col){
@@ -43,7 +41,6 @@ int inside_table(Game *player, int row, int col){
   }
   return 0;
 }
-
 
 /*
  Verifica se a posicao está dentro dos limites
@@ -229,12 +226,12 @@ static int check_table(Ship *ship, QuadTree *player, int X, int Y, int Lx, int L
     for (int j = 0; j < 5; j++) {
       if(ship->bitmap[i][j] != '0'){
         if(inside_table(player,ship->row-2+i,ship->col-2+j) == -1){
-	  if(flag == 0) printf("Erro: posicao fora dos limites\n");
+	  if(flag == 0) printf("Erro: posicao fora dos limites\n\n");
 	  return -1;
         }
 
-	if(CheckQuadTree(player->root,ship->row-2+i,ship->col-2+j,X,Y,Lx,Ly) != 0){
-	  if(flag == 0) printf("Posicao ja ocupada por outro barco!\n");
+	if(CheckQuadTree(player->root,ship->row-2+i,ship->col-2+j,X,Y,Lx,Ly) != NULL){
+	  if(flag == 0) printf("Posicao ja ocupada por outro barco!\n\n");
 	  return -1;
         }
 
@@ -330,17 +327,16 @@ void insert_ships(QuadTree *player, int X, int Y, int Lx, int Ly, int flag){
   Analisa os tiros, se acertou na agua, num barco ou se a posicao já tinha
 sido atingida. Alterando os valores necessarios
 */
-
 int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
-  struct NODE* temp = get_node(player->root,row,col,X,Y,Lx,Ly);
-  if(temp == NULL){
-
+  struct NODE* temp = CheckQuadTree(player->root,row,col,X,Y,Lx,Ly);
+  
+  if(temp == NULL){ //Criar um no para guardar o tiro falhado
     struct NODE* new = CreatePNode(3);
     new->x = row;
     new->y = col;
     new->Value.ship = NULL;
     new->Value.shot = 1;
-    new->colour = 3;
+    //new->colour = 3;
     PRInsert(new, &player->root, X,Y,Lx,Ly);
     
     printf("\nTiro na agua!\n");
@@ -353,7 +349,7 @@ int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
 
     if(temp->Value.ship->bitmap[aux_row][aux_col] == '2'){
 
-      printf("Posicao ja tinha sido atingida!");
+      printf("Posicao ja tinha sido atingida!\n");
 
     }else{
 
@@ -370,4 +366,5 @@ int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
   }
   return 0;
 }
+
 #endif

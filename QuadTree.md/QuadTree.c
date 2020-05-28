@@ -31,6 +31,7 @@ struct NODE * CreatePNode(int colour){
 /*
 1 = GRAY (nonleaf node)
 2 = White (contais a data point / leaf)
+3 = Tiros recebidos
 */
 
 /*
@@ -125,6 +126,53 @@ void PrintQuadTree(struct NODE *no){
   PrintQuadTree(no->Pos[3]);
 }
 
+struct NODE* get_node(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
+
+  if(root == NULL){
+    return NULL;
+  }
+  
+  struct NODE* no = CreatePNode(2);
+  no->x = x;
+  no->y = y;
+  int q = PRCompare(no, X, Y);
+  
+  
+  if(root->colour != 1){
+    if((no->x == root->x) && (no->y == root->y)){
+	free(no);
+	return root;
+    }
+  }
+  if(root->Pos[q] == NULL){
+    free(no);
+    return NULL;
+  }
+  
+  while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
+    root = root->Pos[q];
+    X = X + Sx[q]*Lx;
+    Lx = Lx/2;
+    Y = Y + Sy[q]*Ly;
+    Ly = Ly/2;
+    q = PRCompare(no,X,Y);
+  }
+  
+  if(root->Pos[q] == NULL){
+    free(no);
+    return NULL;
+  }
+  
+  if(root->Pos[q]->colour != 1){
+    if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)){
+      free(no);
+      return root->Pos[q];
+    }
+  }
+  free(no);
+  return NULL;
+}
+
 int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
 
     struct NODE* no = CreatePNode(2);
@@ -138,6 +186,7 @@ int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly
     }else if(root->colour != 1){
       if((no->x == root->x) && (no->y == root->y)){
 	free(no);
+	if (root->colour == 3) return -1; //Para saber quando as cordenadas são de barcos ou tiros falhados
 	return root->Value.ship->type;
       }
     }
@@ -163,6 +212,7 @@ int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly
     if(root->Pos[q]->colour != 1){
       if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)){
 	free(no);
+	if(root->Pos[q]->colour == 3) return -1; //Para saber quando as cordenadas são de barcos ou tiros falhados
         return root->Pos[q]->Value.ship->type;
       }
     }
@@ -170,47 +220,6 @@ int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly
     free(no);
     return 0;
 }
-
-Ship* get_ship(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
-
-    struct NODE* no = CreatePNode(2);
-    no->x = x;
-    no->y = y;
-    int q = PRCompare(no, X, Y);
-    if(root == NULL){
-      return NULL;
-
-    }else if(root->colour != 1){
-      if((no->x == root->x) && (no->y == root->y)){
-        return root->Value.ship;
-      }
-    }
-    if(root->Pos[q] == NULL){
-      return NULL;
-    }
-
-    while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
-      root = root->Pos[q];
-      X = X + Sx[q]*Lx;
-      Lx = Lx/2;
-      Y = Y + Sy[q]*Ly;
-      Ly = Ly/2;
-      q = PRCompare(no,X,Y);
-    }
-
-    if(root->Pos[q] == NULL){
-      return NULL;
-    }
-
-    if(root->Pos[q]->colour != 1){
-      if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)){
-        return root->Pos[q]->Value.ship;
-      }
-    }
-    return NULL;
-  //liberta a memoria reservada para o node
-}
-
 
 void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 
@@ -252,6 +261,86 @@ void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 	}
       }
     }
+    printf("\n");
+  }
+}
+
+
+//Para fazer print das matrizes ao jogar
+void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
+
+  int type;
+  struct NODE* no;
+  
+  //Legenda
+  printf("Meu tabuleiro:");
+  for(int i = 0; i < ((player.size-4)*3-1); i++) printf(" ");
+  printf("\t\t");
+  printf("Tiros efetuados:\n\n   ");
+  
+  //Tabela do jogador atual
+  for(int i = 1; i <= player.size; i++){ //Printar numero das colunas
+    printf("%3d", i);
+  }
+  
+  //Tabela dos shots adversarios
+  printf("\t\t   ");
+  for(int i = 1; i <= player.size; i++){ //Printar numero das colunas
+    printf("%3d", i);
+  }
+  
+  printf("\n");
+  
+  //Print das matrizes
+  for(int i = 1; i <= player.size; i++){
+    printf("%3d", i);
+    
+    for(int j = 1; j <= player.size; j++){
+      if((type = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly)) == -1){
+	printf("%3d", 3);
+      }else if(type == 0){
+	printf("%3d", 0);
+      }else{
+
+	no = get_node(player.root, i, j, X, Y, Lx, Ly);
+	
+	int aux_row = 4 - (no->Value.ship->row + 2 - i);
+	int aux_col = 4 - (no->Value.ship->col + 2 - j);
+	
+	if(no->Value.ship->bitmap[aux_row][aux_col] == '2'){
+	  printf("%3c", 'X');
+	}else{
+	  switch(type){
+	  case(1):
+	    printf("%3c", 'A');
+	    break;
+	  case(2):
+	    printf("%3c", 'B');
+	    break;
+	  case(3):
+	    printf("%3c", 'C');
+	    break;
+	  case(4):
+	    printf("%3c", 'D');
+	    break;
+	  case(5):
+	    printf("%3c", 'E');
+	    break;  
+	  default:
+	    break;
+	  }
+	}
+	
+      }
+    }
+    printf("\t\t");
+    printf("%3d", i);
+    
+    for(int j = 1; j <= player.size; j++) {
+      no = get_node(player.root, i, j, X, Y, Lx, Ly);
+      //printf("%3d", no->Value.shot);
+    }
+    
     printf("\n");
   }
 }

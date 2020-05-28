@@ -332,34 +332,41 @@ sido atingida. Alterando os valores necessarios
 */
 
 int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
-  Ship* temp = get_ship(player->root,row,col,X,Y,Lx,Ly);
+  struct NODE* temp = get_node(player->root,row,col,X,Y,Lx,Ly);
   if(temp == NULL){
 
+    struct NODE* new = CreatePNode(3);
+    new->x = row;
+    new->y = col;
+    new->Value.ship = NULL;
+    new->Value.shot = 1;
+    new->colour = 3;
+    PRInsert(new, &player->root, X,Y,Lx,Ly);
+    
     printf("\nTiro na agua!\n");
     return -1;
 
   }else{
     //calcula o valor correspondente a posicao no bit map
-    int aux_row = 4 - (temp->row + 2 - row);
-    int aux_col = 4 - (temp->col + 2 - col);
+    int aux_row = 4 - (temp->Value.ship->row + 2 - row);
+    int aux_col = 4 - (temp->Value.ship->col + 2 - col);
 
-    if(temp->bitmap[aux_row][aux_col] == '2'){
+    if(temp->Value.ship->bitmap[aux_row][aux_col] == '2'){
 
       printf("Posicao ja tinha sido atingida!");
 
     }else{
 
-      temp->bitmap[aux_row][aux_col] = '2';
-      temp->shot_count++;
+      temp->Value.ship->bitmap[aux_row][aux_col] = '2';
+      temp->Value.ship->shot_count++;
+      temp->Value.shot = 2;
       printf("\nAtingiu o barco adversario!\n");
-
-      if(temp->shot_count == temp->dim) {
+      
+      if(temp->Value.ship->shot_count == temp->Value.ship->dim) {
         printf("Afundou barco adversario!\n");
-	       player->num_ships = player->num_ships - 1;
-      }
-
-    }
-
+	player->num_ships = player->num_ships - 1;
+      } 
+    }   
   }
   return 0;
 }

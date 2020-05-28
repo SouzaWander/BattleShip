@@ -233,12 +233,17 @@ int main(){
   int x;
   int y;
   int turn = 1;
-  #ifdef MAT
   int res = 0;
-  #endif
 
   printf("\nVez do Player%d\n", turn);
-  //print_game(player1, player2);
+  
+#ifdef MAT
+  print_game(player1, player2);
+#else
+  print_game(player1, X, Y, Lx, Ly); 
+#endif
+
+  
   while (player1.num_ships > 0 && player2.num_ships > 0 ){
 
     do{ //Pedir as coordenadas de tiro ao utilizador
@@ -263,68 +268,72 @@ int main(){
      * Usamos o aim_fire para verificar o resultado do tiro e fazer as alteracoes necessaria
      * Verificamos se o jogo acabou, o num_ships do adversario == 0
      */
-
     if(turn == 1){
-      #ifdef QUAD
-      aim_fire(&player2, y, x, X, Y, Lx, Ly);
-      #else
+#ifdef QUAD
+      res = aim_fire(&player2, y, x, X, Y, Lx, Ly);
+#else
       res = aim_fire(&player2, y, x);
       //#endif
       if(res == -1){
-	       player1.matrix[y][x].shot = 1; //Acertou na agua
+	player1.matrix[y][x].shot = 1; //Acertou na agua
       }else{
-	       player1.matrix[y][x].shot = 2; //Acertou num navio
-       }
-       #endif
-
+	player1.matrix[y][x].shot = 2; //Acertou num navio
+      }
+#endif
+      
       if(player2.num_ships == 0){
-	       printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****     *  **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *   **  **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****   * *  **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *    \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     *** **\n");
-         #ifdef MAT
-          free_memory(&player1, &player2, num);
-          #endif
-	         return 0;
-         }
-       }else{
-         #ifdef QUAD
-         aim_fire(&player1, y, x, X, Y, Lx, Ly);
-         #else
-         res = aim_fire(&player1, y, x);
-
-         if(res == -1){
-	          player2.matrix[y][x].shot = 1; //Acertou na agua
-          }else{
-	           player2.matrix[y][x].shot = 2; //Acertou num navio
-           }
-           #endif
-           if(player1.num_ships == 0){
-	            printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****    ***    **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *  *   *   **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****       *   **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *       \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     ****   **\n");
-              #ifdef MAT
-	             free_memory(&player1, &player2, num);
-               #endif
-	              return 0;
-            }
-          }
-
+	printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****     *  **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *   **  **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****   * *  **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *    \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     *** **\n");
+#ifdef MAT
+	free_memory(&player1, &player2, num);
+#endif
+	return 0;
+      }
+    }else{
+      
+#ifdef QUAD
+      res = aim_fire(&player1, y, x, X, Y, Lx, Ly);
+#else
+      res = aim_fire(&player1, y, x);
+      
+      if(res == -1){
+	player2.matrix[y][x].shot = 1; //Acertou na agua
+      }else{
+	player2.matrix[y][x].shot = 2; //Acertou num navio
+      }
+#endif
+      if(player1.num_ships == 0){
+	printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****    ***    **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *  *   *   **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****       *   **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *       \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     ****   **\n");
+#ifdef MAT
+	free_memory(&player1, &player2, num);
+#endif
+	return 0;
+      }
+    }
+    
     //Escolhe quem joga a seguir se o jogo nao acabar
-    #ifdef MAT
     if(turn == 1 && res == -1){
       turn = 2;
       printf("------------------------------------------------\n");
       printf("\nVez do Player%d\n", turn);
+#ifdef MAT
       print_game(player2, player1);
+#else
+      print_game(player2, X,Y,Lx,Ly);
+#endif
     }else if(turn == 1 && res == 0){
       turn = 1;
     }else if(turn == 2 && res == -1){
       turn = 1;
       printf("------------------------------------------------\n");
       printf("\nVez do Player%d\n", turn);
+#ifdef MAT
       print_game(player1, player2);
+#else
+      print_game(player1, X,Y,Lx,Ly);
+#endif
     }else{
       turn = 2;
     }
-    #endif
-
   }
-
   return 0;
 }

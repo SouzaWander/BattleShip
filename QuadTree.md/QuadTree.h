@@ -20,7 +20,6 @@ typedef struct{
   int size;
   int num_ships;
   Ship *ships;
-  int X, Y, Lx, Ly;
 }QuadTree;
 
 
@@ -33,12 +32,12 @@ void PRInsert(struct NODE *no, struct NODE **root, int X, int Y, int Lx, int Ly)
 //Para fazer print da matriz ao colocar os barcos
 void print_table(QuadTree player, int X, int Y, int Lx, int Ly);
 //Para fazer print das matrizes ao jogar
-//void print_game(QuadTree player, QuadTree opponent);
+void print_game(QuadTree player, int X, int Y, int Lx, int Ly);
 //Liberta toda a memoria alocada
 //void free_memory(Game *player1, Game *player2, int num);
 
 int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
-Ship* get_ship(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
+struct NODE* get_node(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
 
 #endif
 #endif

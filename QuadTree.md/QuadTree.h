@@ -5,7 +5,7 @@
 
 typedef struct{
   Ship *ship;
-  int shot; 
+  int shot;
 }Cell;
 
 struct NODE{
@@ -38,6 +38,7 @@ void print_table(QuadTree player, int X, int Y, int Lx, int Ly);
 //void free_memory(Game *player1, Game *player2, int num);
 
 int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
+Ship* get_ship(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
 
 #endif
 #endif

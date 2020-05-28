@@ -24,7 +24,7 @@ struct NODE * CreatePNode(int colour){
     new->x = -1;
     new->y = -1;
   }
-  
+
   return new;
 }
 
@@ -50,7 +50,7 @@ static int PRCompare(struct NODE *P, int X, int Y){
   }else if(P->y < Y){
     return 3;
   }
-  
+
   return 1;
 }
 
@@ -64,10 +64,10 @@ void PRInsert(struct NODE *no, struct NODE **root, int X, int Y, int Lx, int Ly)
   if((*root) == NULL){ //Se não existir nenhum nó no root
     (*root) = no;
     return;
-  }else if((*root)->colour != 1){ //Quando já temos um no 
+  }else if((*root)->colour != 1){ //Quando já temos um no
     if((no->x == (*root)->x) && (no->y == (*root)->y)){ //Se o root for igual ao no terminamos a funcao
       return;
-    }else{  //Se não for vemos em que quadrante é que o root vai ficar 
+    }else{  //Se não for vemos em que quadrante é que o root vai ficar
       U = (*root);
       (*root) = CreatePNode(1);
       q = PRCompare(U, X, Y);
@@ -118,7 +118,7 @@ void PrintQuadTree(struct NODE *no){
   }
 
   printf("(%d,%d) ", no->x, no->y);
-  
+
   PrintQuadTree(no->Pos[0]);
   PrintQuadTree(no->Pos[1]);
   PrintQuadTree(no->Pos[2]);
@@ -171,21 +171,61 @@ int CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly
     return 0;
 }
 
+Ship* get_ship(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
+
+    struct NODE* no = CreatePNode(2);
+    no->x = x;
+    no->y = y;
+    int q = PRCompare(no, X, Y);
+    if(root == NULL){
+      return NULL;
+
+    }else if(root->colour != 1){
+      if((no->x == root->x) && (no->y == root->y)){
+        return root->Value.ship;
+      }
+    }
+    if(root->Pos[q] == NULL){
+      return NULL;
+    }
+
+    while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
+      root = root->Pos[q];
+      X = X + Sx[q]*Lx;
+      Lx = Lx/2;
+      Y = Y + Sy[q]*Ly;
+      Ly = Ly/2;
+      q = PRCompare(no,X,Y);
+    }
+
+    if(root->Pos[q] == NULL){
+      return NULL;
+    }
+
+    if(root->Pos[q]->colour != 1){
+      if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)){
+        return root->Pos[q]->Value.ship;
+      }
+    }
+    return NULL;
+  //liberta a memoria reservada para o node
+}
+
 
 void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 
   int type;
-  
+
   printf("   ");
   for(int i = 1; i <= player.size; i++){
     printf("%3d", i);
   }
-  
+
   printf("\n");
-  
+
   for(int i = 1; i <= player.size; i++){
     printf("%3d  ", i);
- 
+
     for(int j = 1; j <= player.size; j++){
 
       if((type = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly)) == 0){

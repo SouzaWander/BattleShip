@@ -237,7 +237,7 @@ static int check_table(Ship *ship, QuadTree *player, int X, int Y, int Lx, int L
 	  if(flag == 0) printf("Posicao ja ocupada por outro barco!\n");
 	  return -1;
         }
-	
+
       }
     }
   }
@@ -245,13 +245,13 @@ static int check_table(Ship *ship, QuadTree *player, int X, int Y, int Lx, int L
 }
 
 static int add_ship_table(Ship *ship, QuadTree *player, int X, int Y, int Lx, int Ly, int flag){
-  
+
   if(check_table(ship, player, X, Y, Lx, Ly, flag) == -1){
     ship->rot = 360 - ship->rot;
     rotate(ship);
     return -1;
   }
-  
+
   for(int i = 0; i < 5; i++){
     for(int j = 0; j < 5; j++){
       if(ship->bitmap[i][j] != '0'){
@@ -283,7 +283,6 @@ void insert_ships(QuadTree *player, int X, int Y, int Lx, int Ly, int flag){
 	  test = scanf("%d %d %d", &player->ships[i].row , &player->ships[i].col , &player->ships[i].rot);
 	  clean_buffer();
 	}
-
         rotate(&player->ships[i]);
       }while(add_ship_table(&player->ships[i], player, X, Y, Lx, Ly, flag) == -1);
 
@@ -331,33 +330,32 @@ void insert_ships(QuadTree *player, int X, int Y, int Lx, int Ly, int flag){
   Analisa os tiros, se acertou na agua, num barco ou se a posicao já tinha
 sido atingida. Alterando os valores necessarios
 */
-/*
-int aim_fire(Quadtree *player, int row, int col){
 
-  if(player->matrix[row][col].ship == NULL){
+int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
+  Ship* temp = get_ship(player->root,row,col,X,Y,Lx,Ly);
+  if(temp == NULL){
 
     printf("\nTiro na agua!\n");
     return -1;
 
   }else{
-
     //calcula o valor correspondente a posicao no bit map
-    int aux_row = 4 - (player->matrix[row][col].ship->row + 2 - row);
-    int aux_col = 4 - (player->matrix[row][col].ship->col + 2 - col);
+    int aux_row = 4 - (temp->row + 2 - row);
+    int aux_col = 4 - (temp->col + 2 - col);
 
-    if(player->matrix[row][col].ship->bitmap[aux_row][aux_col] == '2'){
+    if(temp->bitmap[aux_row][aux_col] == '2'){
 
       printf("Posicao ja tinha sido atingida!");
 
     }else{
 
-      player->matrix[row][col].ship->bitmap[aux_row][aux_col] = '2';
-      player->matrix[row][col].ship->shot_count++;
+      temp->bitmap[aux_row][aux_col] = '2';
+      temp->shot_count++;
       printf("\nAtingiu o barco adversario!\n");
 
-      if(player->matrix[row][col].ship->shot_count == player->matrix[row][col].ship->dim) {
+      if(temp->shot_count == temp->dim) {
         printf("Afundou barco adversario!\n");
-	player->num_ships = player->num_ships - 1;
+	       player->num_ships = player->num_ships - 1;
       }
 
     }
@@ -365,5 +363,4 @@ int aim_fire(Quadtree *player, int row, int col){
   }
   return 0;
 }
-*/
 #endif

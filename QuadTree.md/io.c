@@ -329,20 +329,29 @@ sido atingida. Alterando os valores necessarios
 */
 int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
   struct NODE* temp = CheckQuadTree(player->root,row,col,X,Y,Lx,Ly);
-  
+
   if(temp == NULL){ //Criar um no para guardar o tiro falhado
     struct NODE* new = CreatePNode(3);
     new->x = row;
     new->y = col;
     new->Value.ship = NULL;
-    new->Value.shot = 1;
+    //new->Value.shot = 1;
     //new->colour = 3;
     PRInsert(new, &player->root, X,Y,Lx,Ly);
-    
+
     printf("\nTiro na agua!\n");
     return -1;
 
-  }else{
+  }else if(temp->colour == 3 ){
+    printf("\nTiro na agua!\n");
+    return -1;
+  }
+  else if(temp->colour == 4){
+    temp->colour = 3;
+    printf("\nTiro na agua!\n");
+    return -1;
+  }
+  else{
     //calcula o valor correspondente a posicao no bit map
     int aux_row = 4 - (temp->Value.ship->row + 2 - row);
     int aux_col = 4 - (temp->Value.ship->col + 2 - col);
@@ -355,14 +364,14 @@ int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
 
       temp->Value.ship->bitmap[aux_row][aux_col] = '2';
       temp->Value.ship->shot_count++;
-      temp->Value.shot = 2;
+      //temp->Value.shot = 2;
       printf("\nAtingiu o barco adversario!\n");
-      
+
       if(temp->Value.ship->shot_count == temp->Value.ship->dim) {
         printf("Afundou barco adversario!\n");
 	player->num_ships = player->num_ships - 1;
-      } 
-    }   
+      }
+    }
   }
   return 0;
 }

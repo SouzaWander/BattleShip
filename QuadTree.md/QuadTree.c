@@ -131,13 +131,13 @@ struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int L
   if(root == NULL){
     return NULL;
   }
-  
+
   struct NODE* no = CreatePNode(2);
   no->x = x;
   no->y = y;
   int q = PRCompare(no, X, Y);
-  
-  
+
+
   if(root->colour != 1){
     if((no->x == root->x) && (no->y == root->y)){
 	free(no);
@@ -148,7 +148,7 @@ struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int L
     free(no);
     return NULL;
   }
-  
+
   while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
     root = root->Pos[q];
     X = X + Sx[q]*Lx;
@@ -157,12 +157,12 @@ struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int L
     Ly = Ly/2;
     q = PRCompare(no,X,Y);
   }
-  
+
   if(root->Pos[q] == NULL){
     free(no);
     return NULL;
   }
-  
+
   if(root->Pos[q]->colour != 1){
     if((no->x == root->Pos[q]->x) && (no->y == root->Pos[q]->y)){
       free(no);
@@ -223,42 +223,46 @@ void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
 
   struct NODE* no;
-  
+
   //Legenda
   printf("Meu tabuleiro:");
   for(int i = 0; i < ((player.size-4)*3-1); i++) printf(" ");
   printf("\t\t");
   printf("Tiros efetuados:\n\n   ");
-  
+
   //Tabela do jogador atual
   for(int i = 1; i <= player.size; i++){ //Printar numero das colunas
     printf("%3d", i);
   }
-  
+
   //Tabela dos shots adversarios
   printf("\t\t   ");
   for(int i = 1; i <= player.size; i++){ //Printar numero das colunas
     printf("%3d", i);
   }
-  
+
   printf("\n");
-  
+
   //Print das matrizes
   for(int i = 1; i <= player.size; i++){
     printf("%3d", i);
-    
+
     for(int j = 1; j <= player.size; j++){
 
       no = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly);
-      
+
       if(no == NULL){
 	printf("%3d", 0);
       }else if(no->colour == 3){
 	printf("%3d", 3);
-      }else{	
+      }
+      else if(no->colour == 4){
+          printf("%3d", 0);
+      }
+      else{
 	int aux_row = 4 - (no->Value.ship->row + 2 - i);
 	int aux_col = 4 - (no->Value.ship->col + 2 - j);
-	
+
 	if(no->Value.ship->bitmap[aux_row][aux_col] == '2'){
 	  printf("%3c", 'X');
 	}else{
@@ -277,7 +281,7 @@ void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
 	    break;
 	  case(5):
 	    printf("%3c", 'E');
-	    break;  
+	    break;
 	  default:
 	    break;
 	  }
@@ -286,12 +290,17 @@ void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
     }
     printf("\t\t");
     printf("%3d", i);
-    
+
     for(int j = 1; j <= player.size; j++) {
       no = CheckQuadTree(player.root, i, j, X, Y, Lx, Ly);
-      //printf("%3d", no->Value.shot);
+      if(no== NULL){
+        printf("%3d", 0);
+      }
+      else{
+        printf("%3d", no->Value.shot);
+      }
     }
-    
+
     printf("\n");
   }
 }

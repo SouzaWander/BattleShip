@@ -138,14 +138,14 @@ int main(){
 #else
     insert_ships(&player1, X, Y, Lx, Ly, 0);
 #endif
-    
+
     printf("\n\nPlayer 2:\n");
 #ifdef MAT
     insert_ships(&player2, 0);
 #else
     insert_ships(&player2, X, Y, Lx, Ly, 0);
 #endif
-    
+
   }else if(option == 2){ //Caso seja acionada a opcao automatica
 
     srand(time(0));
@@ -231,14 +231,17 @@ int main(){
   int res = 0;
 
   printf("\nVez do Player%d\n", turn);
-  
+
 #ifdef MAT
   print_game(player1, player2);
 #else
-  print_game(player1, X, Y, Lx, Ly); 
+  struct NODE* temp;
+  struct NODE* new;
+  print_game(player1, X, Y, Lx, Ly);
+
 #endif
 
-  
+
   while (player1.num_ships > 0 && player2.num_ships > 0 ){
 
     do{ //Pedir as coordenadas de tiro ao utilizador
@@ -265,7 +268,27 @@ int main(){
      */
     if(turn == 1){
 #ifdef QUAD
+      temp = CheckQuadTree(player1.root, y, x, X, Y, Lx, Ly);
       res = aim_fire(&player2, y, x, X, Y, Lx, Ly);
+      if(temp == NULL){
+        new = CreatePNode(4);
+        new->x = x;
+        new->y = y;
+        new->Value.ship = NULL;
+        if(res == -1){
+          new->Value.shot = 1;
+        }else{
+          new->Value.shot = 1;
+        }
+        PRInsert(new, &player1.root, X,Y,Lx,Ly);
+      }
+      else{
+        if(res == -1){
+          temp->Value.shot = 1;
+        }else{
+          temp->Value.shot = 2;
+        }
+      }
 #else
       res = aim_fire(&player2, y, x);
       //#endif
@@ -275,7 +298,7 @@ int main(){
 	player1.matrix[y][x].shot = 2; //Acertou num navio
       }
 #endif
-      
+
       if(player2.num_ships == 0){
 	printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****     *  **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *   **  **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****   * *  **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *    \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     *** **\n");
 #ifdef MAT
@@ -284,12 +307,32 @@ int main(){
 	return 0;
       }
     }else{
-      
+
 #ifdef QUAD
+      temp = CheckQuadTree(player2.root, y, x, X, Y, Lx, Ly);
       res = aim_fire(&player1, y, x, X, Y, Lx, Ly);
+      if(temp == NULL){
+        new = CreatePNode(4);
+        new->x = x;
+        new->y = y;
+        new->Value.ship = NULL;
+        if(res == -1){
+          new->Value.shot = 1;
+        }else{
+          new->Value.shot = 1;
+        }
+        PRInsert(new, &player2.root, X,Y,Lx,Ly);
+      }
+      else{
+        if(res == -1){
+          temp->Value.shot = 1;
+        }else{
+          temp->Value.shot = 2;
+        }
+      }
 #else
       res = aim_fire(&player1, y, x);
-      
+
       if(res == -1){
 	player2.matrix[y][x].shot = 1; //Acertou na agua
       }else{
@@ -304,7 +347,7 @@ int main(){
 	return 0;
       }
     }
-    
+
     //Escolhe quem joga a seguir se o jogo nao acabar
     if(turn == 1 && res == -1){
       turn = 2;

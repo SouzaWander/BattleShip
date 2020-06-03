@@ -126,7 +126,10 @@ void PrintQuadTree(struct NODE *no){
 }
 
 
-
+//Percorre a arvore e retorna um nó que se encontra no quadrante das coordenadas x y
+/*Usada no codigo para verificar se já existe um nó numa dada coordenada e para obter um nó de uma dada
+util por exemplo quando estamos a inserir barcos no "tabuleiro" e para modificar alguns valores contidos nessa
+estrutura quando um jogador acerta um tiro */
 struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly){
   if(root == NULL){
     return NULL;
@@ -148,7 +151,7 @@ struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int L
     free(no);
     return NULL;
   }
-
+  //Percorre a arvore ate chegar a um nó folha
   while(root->Pos[q] != NULL && root->Pos[q]->colour == 1){
     root = root->Pos[q];
     X = X + Sx[q]*Lx;
@@ -302,6 +305,24 @@ void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
     }
 
     printf("\n");
+  }
+}
+//função recurssiva para libertar a memoria reservada pela matriz
+void free_tree(struct NODE* node){
+  if(node == NULL){
+    return;
+  }
+  // se for folha
+  else if(node->colour > 1){
+    free(node);
+    return;
+  }
+  //aplicar a função para todos os ramos daquele no
+  else{
+    for(int i = 0; i < 4; i++){
+      free_tree(node->Pos[i]);
+    }
+    free(node);
   }
 }
 #endif

@@ -37,6 +37,6 @@ void print_game(QuadTree player, int X, int Y, int Lx, int Ly);
 //void free_memory(Game *player1, Game *player2, int num);
 struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
 //get_node(struct NODE *root, int x, int y,  int X, int Y, int Lx, int Ly);
-
+void free_tree(struct NODE* node);
 #endif
 #endif

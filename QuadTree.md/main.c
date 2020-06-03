@@ -343,6 +343,9 @@ int main(){
 	printf("\n*       *       *  *  *      *   \t  ****   *          *      *   *  *****  ****    ***    **\n *     * *     *   *  * *    *  *\t  *   *  *         * *      * *   *      *   *  *   *   **\n  *   *   *   *    *  *  *   *   \t  ****   *        *****      *    *****  ****       *   **\n   * *     * *     *  *   *  *  *\t  *      *       *     *     *    *      **       *       \n    *       *      *  *    * *   \t  *      *****  *       *    *    *****  * *     ****   **\n");
 #ifdef MAT
 	free_memory(&player1, &player2, num);
+#else
+  free_tree(player1.root);
+  free_tree(player2.root);
 #endif
 	return 0;
       }

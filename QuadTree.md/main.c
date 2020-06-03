@@ -291,7 +291,6 @@ int main(){
       }
 #else
       res = aim_fire(&player2, y, x);
-      //#endif
       if(res == -1){
 	player1.matrix[y][x].shot = 1; //Acertou na agua
       }else{

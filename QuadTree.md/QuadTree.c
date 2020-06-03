@@ -176,6 +176,7 @@ struct NODE* CheckQuadTree(struct NODE *root, int x, int y,  int X, int Y, int L
   return NULL;
 }
 
+//Para fazer print durante a insercao dos barcos
 void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 
   struct NODE *no;
@@ -222,7 +223,7 @@ void print_table(QuadTree player, int X, int Y, int Lx, int Ly){
 }
 
 
-//Para fazer print das matrizes ao jogar
+//Para fazer print durante o jogo
 void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
 
   struct NODE* no;
@@ -307,6 +308,7 @@ void print_game(QuadTree player, int X, int Y, int Lx, int Ly){
     printf("\n");
   }
 }
+
 //função recurssiva para libertar a memoria reservada pela matriz
 void free_tree(struct NODE* node){
   if(node == NULL){

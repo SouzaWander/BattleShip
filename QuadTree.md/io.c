@@ -335,8 +335,6 @@ int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
     new->x = row;
     new->y = col;
     new->Value.ship = NULL;
-    //new->Value.shot = 1;
-    //new->colour = 3;
     PRInsert(new, &player->root, X,Y,Lx,Ly);
 
     printf("\nTiro na agua!\n");
@@ -364,7 +362,6 @@ int aim_fire(QuadTree *player, int row, int col, int X, int Y, int Lx, int Ly){
 
       temp->Value.ship->bitmap[aux_row][aux_col] = '2';
       temp->Value.ship->shot_count++;
-      //temp->Value.shot = 2;
       printf("\nAtingiu o barco adversario!\n");
 
       if(temp->Value.ship->shot_count == temp->Value.ship->dim) {
